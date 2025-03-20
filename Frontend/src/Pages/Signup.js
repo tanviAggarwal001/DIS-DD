@@ -1,26 +1,59 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './Auth.css';
+import { useNavigate } from "react-router-dom";
 
-function Signup() {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+import './Auth.css';
+import { ToastContainer } from "react-toastify";
+import { handleError, handleSuccess } from "../utils";
+
+
+const Signup = () => {
+  const [signInfo, setSignInfo] = useState({
+    name: "",
+    email: "",
+    password: "",
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setSignInfo((prevInfo) => ({
+      ...prevInfo,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement signup logic
-    console.log('Signup attempt:', formData);
+    const { name, email, password } = signInfo;
+
+    if (!name || !email || !password) {
+      return handleError("Fields are empty");
+    }
+
+    try {
+      const url = "http://localhost:5000/auth/signup";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(signInfo),
+      });
+
+      const result = await response.json();
+      const { success, message, error } = result;
+
+      if (success) {
+        handleSuccess(message);
+        setTimeout(() => navigate("/home"), 1000);
+      } else if (error && error.details) {
+        handleError(error.details[0]?.message || "An error occurred");
+      } else {
+        handleError(message || "Signup failed");
+      }
+    } catch (err) {
+      handleError("Network error. Please try again.");
+    }
   };
 
   return (
@@ -36,7 +69,7 @@ function Signup() {
               type="text"
               id="username"
               name="username"
-              value={formData.username}
+              value={signInfo.username}
               onChange={handleChange}
               required
               placeholder="Choose a username"
@@ -49,7 +82,7 @@ function Signup() {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
+              value={signInfo.email}
               onChange={handleChange}
               required
               placeholder="Enter your email"
@@ -62,33 +95,24 @@ function Signup() {
               type="password"
               id="password"
               name="password"
-              value={formData.password}
+              value={signInfo.password}
               onChange={handleChange}
               required
               placeholder="Create a password"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              placeholder="Confirm your password"
-            />
-          </div>
+          
 
           <button type="submit" className="auth-button">
             Create Account
           </button>
         </form>
+        <ToastContainer />
+
 
         <div className="auth-footer">
-          <p>Already have an account? <Link to="/">Sign in</Link></p>
+          <p>Already have an account? <Link to="/home">Sign in</Link></p>
         </div>
       </div>
     </div>
