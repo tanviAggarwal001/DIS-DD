@@ -1,21 +1,21 @@
-import React, { useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react';
 
-function RefreshHandler({setisAuthenticated}) {
-    const location = useLocation();
-    const navigate = useNavigate();
+const RefreshHandler = ({ setIsAuthenticated, setIsAdminAuthenticated }) => {
+  useEffect(() => {
+    // Check for user authentication
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+    
+    // Check for admin authentication
+    const adminToken = localStorage.getItem('adminToken');
+    if (adminToken) {
+      setIsAdminAuthenticated(true);
+    }
+  }, [setIsAuthenticated, setIsAdminAuthenticated]);
 
-    useEffect(() => {
-        if(localStorage.getItem("token")){
-            setisAuthenticated(true);
-            if(location.pathname==='/' || location.pathname==='/login' || location.pathname === '/signup'){
-                navigate('/home', {replace:false})
-            }
-        }
-    }, [location, navigate, setisAuthenticated])
-  return (
-    null
-  )
-}
+  return null;
+};
 
-export default RefreshHandler
+export default RefreshHandler;

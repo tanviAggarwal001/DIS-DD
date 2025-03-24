@@ -45,7 +45,7 @@ const Signup = () => {
 
       if (success) {
         handleSuccess(message);
-        setTimeout(() => navigate("/home"), 1000);
+        setTimeout(() => navigate("/login"), 1000);
       } else if (error && error.details) {
         handleError(error.details[0]?.message || "An error occurred");
       } else {
@@ -64,12 +64,12 @@ const Signup = () => {
         
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="name">Username</label>
             <input
               type="text"
-              id="username"
-              name="username"
-              value={signInfo.username}
+              id="name"
+              name="name"
+              value={signInfo.name}
               onChange={handleChange}
               required
               placeholder="Choose a username"
@@ -102,21 +102,18 @@ const Signup = () => {
             />
           </div>
 
-          
-
           <button type="submit" className="auth-button">
             Create Account
           </button>
         </form>
         <ToastContainer />
 
-
         <div className="auth-footer">
-          <p>Already have an account? <Link to="/home">Sign in</Link></p>
+          <p>Already have an account? <Link to="/login">Sign in</Link></p>
         </div>
       </div>
     </div>
   );
 }
 
-export default Signup; 
+export default Signup;

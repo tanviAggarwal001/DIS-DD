@@ -1,0 +1,47 @@
+:root {
+    --primary-color: #8A2BE2;
+    --secondary-color: #6A0DAD;
+    --background-color: #121212;
+    --text-color: #FFFFFF;
+    --card-bg: #1A1A1A;
+    --border-color: #333333;
+    --success-color: #4CAF50;
+    --danger-color: #F44336;
+  }
+  
+  .admin-dashboard {
+    min-height: 100vh;
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .admin-header h1 {
+    margin: 0;
+    color: var(--primary-color);
+  }
+  
+  .admin-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .logout-button {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }

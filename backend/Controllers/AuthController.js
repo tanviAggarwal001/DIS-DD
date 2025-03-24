@@ -12,10 +12,11 @@ const signup = async (req, res) => {
       return res.status(409).json({ message: "User already exists, please login to continue", success: false });
     }
 
-    // Create new user & hash password
-    const newUser = new userModel({ name, email, password });
-    newUser.password = await bcrypt.hash(password, 10);
-    await newUser.save();
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Create new user with hashed password
+    const newUser = await userModel.create({ name, email, password: hashedPassword });
 
     res.status(201).json({ message: "Sign Up Successful", success: true });
   } catch (error) {
@@ -42,17 +43,18 @@ const login = async (req, res) => {
 
     // Generate JWT token
     const jwtToken = jwt.sign(
-      { email: user.email, _id: user._id },
-      process.env.JWT_SECRET, // ✅ Correct env variable
+      { email: user.email, id: user.id, role: user.role },
+      process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
-    console.log(jwtToken);
+    
     res.status(200).json({
       message: "Login successful",
       success: true,
       jwtToken,
       email,
       name: user.name,
+      role: user.role
     });
   } catch (error) {
     console.error("❌ Error in Login:", error);
@@ -60,4 +62,25 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { signup, login };
+// Get current user profile
+const getProfile = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found", success: false });
+    }
+    
+    // Don't send password in response
+    const { password, ...userData } = user;
+    
+    res.status(200).json({
+      success: true,
+      user: userData
+    });
+  } catch (error) {
+    console.error("❌ Error fetching profile:", error);
+    return res.status(500).json({ message: "Internal Server Error", success: false });
+  }
+};
+
+module.exports = { signup, login, getProfile };
