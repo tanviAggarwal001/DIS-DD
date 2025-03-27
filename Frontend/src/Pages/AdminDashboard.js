@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { handleError, handleSuccess } from '../utils';
 import { ToastContainer } from 'react-toastify';
 import './Admin.css';
+import './Home.css';
+import bgImage from './UI Assets/bg-image-valo1.png'
 
 const AdminDashboard = () => {
   const [userData, setUserData] = useState([]);
@@ -83,93 +85,120 @@ const AdminDashboard = () => {
     }
   };
 
-  return (
-    <div className="admin-dashboard">
-      <header className="admin-header">
-        <h1>Admin Dashboard</h1>
-        <div className="admin-info">
-          <span>Welcome, {adminInfo.username} ({adminInfo.role})</span>
-          <div className="header-actions">
-            <button onClick={handleRefresh} className="refresh-button">
+
+return (
+<div className="home-container">
+      <nav className="home-nav">
+        <div className="nav-brand">
+          <span className="brand-text">DOSA DOMINATORS</span>
+          <span className="brand-subtitle">ESPORTS</span>
+        </div>
+        <div className="nav-links">
+          <Link to="/profile" className="nav-link">Profile</Link>
+          <Link to="/tournaments" className="nav-link">Tournaments</Link>
+          <Link to="/games" className="nav-link">Games</Link>
+        </div>
+        <div className="nav-actions">
+        <button onClick={handleRefresh}  className="logout-button">
               Refresh Data
             </button>
-            <button onClick={handleLogout} className="logout-button">
-              Logout
-            </button>
-          </div>
+          <button 
+            className="logout-button"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+          <ToastContainer />
         </div>
-      </header>
+      </nav>
 
-      <div className="dashboard-content">
-        {loading ? (
-          <div className="loading">Loading data...</div>
-        ) : (
-          <>
-            <section className="data-section">
-              <h2>Users</h2>
-              {userData.length > 0 ? (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Created At</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {userData.map(user => (
-                      <tr key={user.id}>
-                        <td>{user.id}</td>
-                        <td>{user.name}</td>
-                        <td>{user.email}</td>
-                        <td>{new Date(user.created_at).toLocaleString()}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <p>No users found</p>
-              )}
-            </section>
+      <main className="home-main">
+        <section className="hero-section">
+          <div className="hero-content">
+            <h1>Welcome to Dosa Dominators Esports</h1>
+            <p>Join South Asia's premier competitive gaming community</p>
+            <p className="hero-subtitle">Compete • Win • Dominate</p>
+          </div>
+        </section>
 
-            {adminInfo.role === 'super' && (
-              <section className="data-section">
-                <h2>Admins</h2>
-                {adminData.length > 0 ? (
-                  <table className="data-table">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Created At</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {adminData.map(admin => (
-                        <tr key={admin.id}>
-                          <td>{admin.id}</td>
-                          <td>{admin.username}</td>
-                          <td>{admin.email}</td>
-                          <td>{admin.role}</td>
-                          <td>{new Date(admin.created_at).toLocaleString()}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <p>No admin records found</p>
-                )}
-              </section>
-            )}
-          </>
-        )}
-      </div>
-      <ToastContainer />
+       
+          <section className="admin-dashboard">
+            <h2>Admin Control Panel</h2>
+            <div className="dashboard-grid">
+              <div className="dashboard-card">
+                <h3>Tournament Management</h3>
+                <ul>
+                  <li>Create new tournaments</li>
+                  <li>Manage existing tournaments</li>
+                  <li>Approve tournament requests</li>
+                </ul>
+                <button className="action-button">Manage Tournaments</button>
+              </div>
+              <div className="dashboard-card">
+                <h3>User Management</h3>
+                <ul>
+                  <li>View all users</li>
+                  <li>Ban/unban users</li>
+                  <li>Manage user roles</li>
+                </ul>
+                <button className="action-button">Manage Users</button>
+              </div>
+              <div className="dashboard-card">
+                <h3>Game Management</h3>
+                <ul>
+                  <li>Add new games</li>
+                  <li>Update game details</li>
+                  <li>Manage game categories</li>
+                </ul>
+                <button className="action-button">Manage Games</button>
+              </div>
+            </div>
+          </section>
+       
+          <section className="featured-tournaments">
+          <h2>Featured Tournaments</h2>
+          <div className="tournament-grid">
+            <div className="tournament-card">
+              <div className="tournament-header">
+                <h3>VALORANT Championship</h3>
+                <span className="tournament-status">Registering</span>
+              </div>
+              <div className="tournament-details">
+                <p className="prize-pool">Prize Pool: $10,000</p>
+                <p className="tournament-date">March 25, 2024</p>
+                <p className="tournament-slots">Slots: 16/32</p>
+              </div>
+              <button className="join-button">Join Now</button>
+            </div>
+            <div className="tournament-card">
+              <div className="tournament-header">
+                <h3>CS:GO Masters</h3>
+                <span className="tournament-status">Starting Soon</span>
+              </div>
+              <div className="tournament-details">
+                <p className="prize-pool">Prize Pool: $5,000</p>
+                <p className="tournament-date">March 30, 2024</p>
+                <p className="tournament-slots">Slots: 24/32</p>
+              </div>
+              <button className="join-button">Join Now</button>
+            </div>
+            <div className="tournament-card">
+              <div className="tournament-header">
+                <h3>Apex Legends Cup</h3>
+                <span className="tournament-status">Open</span>
+              </div>
+              <div className="tournament-details">
+                <p className="prize-pool">Prize Pool: $7,500</p>
+                <p className="tournament-date">April 5, 2024</p>
+                <p className="tournament-slots">Slots: 8/32</p>
+              </div>
+              <button className="join-button">Join Now</button>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   );
-};
+}
 
 export default AdminDashboard;

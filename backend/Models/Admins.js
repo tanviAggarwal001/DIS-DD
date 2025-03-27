@@ -14,6 +14,16 @@ const initializeAdminsTable = async () => {
       )
     `);
     console.log("Admins table initialized");
+    const adminCheck = await pool.query('SELECT * FROM admins WHERE role = $1', ['admin']);
+    if (adminCheck.rows.length === 0) {
+      const bcrypt = require('bcrypt');
+      const adminPassword = await bcrypt.hash('admin123', 10); // Default admin password - change in production
+      await pool.query(
+        'INSERT INTO admins (username, email, password, role) VALUES ($1, $2, $3, $4)',
+        ['Admin', 'admin@example.com', adminPassword, 'admin']
+      );
+      console.log("Default admin created in admins table");
+    }
   } catch (error) {
     console.error("Error initializing admins table:", error);
   }

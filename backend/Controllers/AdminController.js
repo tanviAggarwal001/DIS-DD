@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const adminModel = require("../Models/Users");
+const adminModel = require("../Models/Admins");
 const jwt = require("jsonwebtoken");
 
 const adminLogin = async (req, res) => {
@@ -9,7 +9,7 @@ const adminLogin = async (req, res) => {
     // Check if admin exists
     const admin = await adminModel.findOne({ email });
     if (!admin) {
-      return res.status(401).json({ message: "Invalid credentials", success: false });
+      return res.status(401).json({ message: "Admin Not Found", success: false });
     }
 
     // Compare passwords
