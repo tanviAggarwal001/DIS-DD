@@ -5,7 +5,10 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { 
     require: true,
-    rejectUnauthorized: false }  // Required for Supabase
+    rejectUnauthorized: false
+  },
+  // connectionTimeoutMillis: 50000, // Increase timeout to 5 seconds
+  // idleTimeoutMillis: 30000,      // Close idle connections after 30 seconds
 });
 
 // Test the connection

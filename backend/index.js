@@ -8,6 +8,7 @@ const pool = require("./Models/db");
 
 const myAuthRouters = require("./Routes/AuthRouter");
 const adminRouters = require("./Routes/AdminRouter");
+const gameRouters =  require("./Routes/GameRouter")
 // const myResumeRouters = require("./Routes/ResumeRouter");
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/auth", myAuthRouters);
 app.use("/admin", adminRouters);
+app.use("/games", gameRouters);
 // app.use("/output", express.static(path.join(__dirname, "output")));
 // app.use("/resume", myResumeRouters);
 
