@@ -94,9 +94,9 @@ return (
           <span className="brand-subtitle">ESPORTS</span>
         </div>
         <div className="nav-links">
-          <Link to="/profile" className="nav-link">Profile</Link>
-          <Link to="/tournaments" className="nav-link">Tournaments</Link>
-          <Link to="/games" className="nav-link">Games</Link>
+          <Link to="/admin/profile" className="nav-link">Profile</Link>
+          <Link to="/admin/tournaments" className="nav-link">Tournaments</Link>
+          <Link to="/admin/games" className="nav-link">Games</Link>
         </div>
         <div className="nav-actions">
         <button onClick={handleRefresh}  className="logout-button">

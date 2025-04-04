@@ -6,15 +6,17 @@ import Home from './Pages/Home';
 import AdminLogin from './Pages/AdminLogin';
 import AdminDashboard from './Pages/AdminDashboard';
 import RefreshHandler from './RefreshHandler';
+import AdminGames from './Pages/AdminGames';
 import "./App.css"
+import UserGameList from './Pages/UserGameList';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem('token')  // Check if user token exists
+    !!localStorage.getItem('token')  
   );
   
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(
-    !!localStorage.getItem('adminToken')  // Check if admin token exists
+    !!localStorage.getItem('adminToken')  
   );
 
   // Regular user authentication check
@@ -43,6 +45,10 @@ function App() {
         {/* Admin routes */}
         <Route path='/admin/login' element={<AdminLogin />} />
         <Route path='/admin/dashboard' element={<AdminRoute element={<AdminDashboard/>}/>} />
+
+        <Route path='/games' element={<UserGameList/>} />
+        <Route path='/admin/games' element={<AdminGames/>} />
+
       </Routes>
     </div>
   )
