@@ -14,22 +14,23 @@ const CreateTournament = ({ onTournamentAdded }) => {
 
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [logginUser, setLogginUser] = useState("");
+  // const [logginUser, setLogginUser] = useState("");
   const [creatorId, setCreatorId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem("LogginUser");
-    setLogginUser(storedUsername);
-    console.log(storedUsername);
+    setCreatorId(2);
+    // const storedUsername = localStorage.getItem("adminUsername");
+    // setLogginUser(storedUsername);
+    // console.log(storedUsername);
 
-    if (storedUsername) {
-      axios
-        .get(`http://localhost:5000/user-id/${storedUsername}`)
-        .then((res) => setCreatorId(parseInt(res.data.id))
-      )
-        .catch((err) => console.error("Error fetching user ID:", err));
-    }
+    // if (storedUsername) {
+    //   axios
+    //     .get(`http://localhost:5000/admin-id/${storedUsername}`)
+    //     .then((res) => setCreatorId(parseInt(res.data.id))
+    //   )
+    //     .catch((err) => console.error("Error fetching user ID:", err));
+    // }
   }, []);
 
   useEffect(() => {

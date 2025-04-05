@@ -10,7 +10,9 @@ const myAuthRouters = require("./Routes/AuthRouter");
 const adminRouters = require("./Routes/AdminRouter");
 const gameRouters =  require("./Routes/GameRouter")
 const tournamentRouters = require("./Routes/TornamentRouter")
-const user = require("./Models/Users");
+const tournamentParticipantsRouters = require("./Routes/TournamentparticipantRouter")
+const user = require("./Models/Admins");
+const user2 = require("./Models/Users");
 // const myResumeRouters = require("./Routes/ResumeRouter");
 
 const app = express();
@@ -23,7 +25,9 @@ app.use("/auth", myAuthRouters);
 app.use("/admin", adminRouters);
 app.use("/games", gameRouters);
 app.use("/tournaments", tournamentRouters);
-app.get('/user-id/:username', user.getUserIdByUsername);
+app.use("/participants", tournamentParticipantsRouters);
+app.get('/admin-id/:username', user.getUserIdByUsername);
+app.get('/user-id/:username', user2.getUserIdByUsername);
 
 // app.use("/output", express.static(path.join(__dirname, "output")));
 // app.use("/resume", myResumeRouters);

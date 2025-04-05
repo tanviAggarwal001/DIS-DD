@@ -60,6 +60,18 @@ const adminModel = {
     }
   },
 
+  getUserIdByUsername : async (req, res) => {
+    const { username } = req.params;
+    try {
+      console.log("came here");
+      const result = await pool.query("SELECT id FROM admins WHERE name = $1", [username]);
+      if (result.rows.length === 0) return res.status(404).json({ error: "Admin not found" });
+      res.json({ id: result.rows[0].id });
+    } catch (err) {
+      res.status(500).json({ error: "Database error" });
+    }
+  },
+
   // Get all admins
   findAll: async () => {
     try {

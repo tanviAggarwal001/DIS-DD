@@ -9,7 +9,8 @@ import RefreshHandler from './RefreshHandler';
 import AdminGames from './Pages/AdminGames';
 import "./App.css"
 import UserGameList from './Pages/UserGameList';
-import CreateTournament from './Components/CreateTournament';
+import AdminTournaments from './Pages/AdminTournaments';
+import UserTournamentsPage from './Pages/UserTournamentsPage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -49,7 +50,8 @@ function App() {
 
         <Route path='/games' element={<UserGameList/>} />
 
-        <Route path='/tournaments' element={<CreateTournament/>} />
+        <Route path='/tournaments' element={<UserTournamentsPage/>} />
+        <Route path='/admin/tournaments' element={<AdminTournaments/>} />
         <Route path='/admin/games' element={<AdminGames/>} />
 
       </Routes>
