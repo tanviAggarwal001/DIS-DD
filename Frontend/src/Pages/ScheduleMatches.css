@@ -1,0 +1,146 @@
+.schedule-match-container {
+    background-color: rgba(26, 26, 26, 0.9);
+    border-radius: 15px;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(138, 43, 226, 0.2);
+    color: #FFFFFF;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .schedule-match-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .schedule-match-container h2 {
+    color: #8A2BE2;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  
+  .dropdowns {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .dropdowns select {
+    background-color: rgba(18, 18, 18, 0.8);
+    border: 1px solid #333333;
+    border-radius: 5px;
+    padding: 0.8rem 1rem;
+    color: #FFFFFF;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+    width: 100%;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='white' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    cursor: pointer;
+  }
+  
+  .dropdowns select:focus {
+    outline: none;
+    border-color: #8A2BE2;
+    box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.2);
+    transform: translateY(-2px);
+  }
+  
+  .dropdowns select:hover {
+    border-color: rgba(138, 43, 226, 0.5);
+  }
+  
+  .dropdowns select option {
+    background-color: #121212;
+    color: #FFFFFF;
+  }
+  
+  .schedule-btn {
+    background-color: #8A2BE2;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .schedule-btn:hover {
+    background-color: #9B30FF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(138, 43, 226, 0.4);
+  }
+  
+  .schedule-btn:active {
+    transform: translateY(0);
+  }
+  
+  .message {
+    margin-top: 1.5rem;
+    padding: 0.8rem 1rem;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 500;
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Success message style */
+  .message:first-letter {
+    font-size: 1.2em;
+  }
+  
+  /* Make the component responsive */
+  @media (max-width: 768px) {
+    .schedule-match-container {
+      padding: 1.5rem;
+      margin: 1rem;
+    }
+    
+    .schedule-match-container h2 {
+      font-size: 1.5rem;
+    }
+  }
+  
+  /* Enhanced visual styling for better UX */
+  .dropdowns::before {
+    content: 'Select Matchup';
+    display: block;
+    color: #8A2BE2;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Custom success message style */
+  .message:contains("✅") {
+    background-color: rgba(76, 175, 80, 0.2);
+    border: 1px solid rgba(76, 175, 80, 0.5);
+  }
+  
+  /* Custom error message style */
+  .message:contains("❌") {
+    background-color: rgba(244, 67, 54, 0.2);
+    border: 1px solid rgba(244, 67, 54, 0.5);
+  }

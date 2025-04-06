@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import './AllTournaments.css';
 
 const AllTournaments = () => {
@@ -68,7 +69,10 @@ const AllTournaments = () => {
             <th>Start Date</th>
             <th>End Date</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th>View Players</th>
+            <th>Schedule Matches</th>
           </tr>
         </thead>
         <tbody>
@@ -81,8 +85,15 @@ const AllTournaments = () => {
               <td>{tournament.status}</td>
               <td>
                 <button className="edit-button" onClick={() => handleEdit(tournament.id)}>✏️ Edit</button>
+              </td>
+              <td>
                 <button className="delete-button" onClick={() => handleDelete(tournament.id)}>🗑️ Delete</button>
+              </td>
+              <td>
                 <button className="view-button" onClick={() => fetchRegisteredPlayers(tournament.id)}>👥 View Players</button>
+              </td>
+              <td>
+                <Link to={`/schedule-match/${tournament.id}`}>Schedule Match</Link>
               </td>
             </tr>
           ))}

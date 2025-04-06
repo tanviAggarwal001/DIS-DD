@@ -11,6 +11,7 @@ import "./App.css"
 import UserGameList from './Pages/UserGameList';
 import AdminTournaments from './Pages/AdminTournaments';
 import UserTournamentsPage from './Pages/UserTournamentsPage';
+import ScheduleMatch from './Pages/ScheduleMatches';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -53,6 +54,10 @@ function App() {
         <Route path='/tournaments' element={<UserTournamentsPage/>} />
         <Route path='/admin/tournaments' element={<AdminTournaments/>} />
         <Route path='/admin/games' element={<AdminGames/>} />
+
+
+        <Route path="/schedule-match/:tournamentId" element={<ScheduleMatch/>} />
+
 
       </Routes>
     </div>
