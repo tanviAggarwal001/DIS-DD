@@ -98,6 +98,38 @@ const tournamentModel = {
     }
   },
 
+  updateStatuses: async () => {
+    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+  
+    try {
+      // Set to 'completed'
+      await pool.query(`
+        UPDATE tournaments
+        SET status = 'completed'
+        WHERE end_date < $1
+      `, [today]);
+  
+      // Set to 'ongoing'
+      await pool.query(`
+        UPDATE tournaments
+        SET status = 'ongoing'
+        WHERE start_date <= $1 AND end_date >= $1
+      `, [today]);
+  
+      // Set to 'upcoming'
+      await pool.query(`
+        UPDATE tournaments
+        SET status = 'upcoming'
+        WHERE start_date > $1
+      `, [today]);
+    } catch (err) {
+      console.error("Error updating statuses:", err);
+      throw err;
+    }
+  },
+  
+
+
   delete: async (id) => {
     try {
       await pool.query(`DELETE FROM tournaments WHERE id = $1`, [id]);

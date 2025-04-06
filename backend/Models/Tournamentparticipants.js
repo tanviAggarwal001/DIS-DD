@@ -6,7 +6,7 @@ const initializeTournamentParticipantsTable = async () => {
         CREATE TABLE IF NOT EXISTS tournament_participants (
           id SERIAL PRIMARY KEY,
   tournament_id INT REFERENCES tournaments(id) ON DELETE CASCADE,
-  user_id INT NOT NULL,
+ user_id INT REFERENCES users(id) ON DELETE CASCADE,
   registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE(tournament_id, user_id)
         )
@@ -21,17 +21,25 @@ const initializeTournamentParticipantsTable = async () => {
   const tournamentParticipants = {
     register: async (tournament_id, user_id) => {
       try {
-        const result = await pool.query(
-          `INSERT INTO tournament_participants (tournament_id, user_id)
-           VALUES ($1, $2) RETURNING *`,
-          [tournament_id, user_id]
-        );
-        return result.rows[0];
-      } catch (error) {
-        throw new Error('User already registered or DB error');
+        const { userId } = req.params;
+    
+        const result = await pool.query(`
+          SELECT t.*
+          FROM tournaments t
+          INNER JOIN tournament_participants tp
+          ON t.id = tp.tournament_id
+          WHERE tp.user_id = $1
+        `, [userId]);
+    
+        res.status(200).json(result.rows);
+      } catch (err) {
+        res.status(500).json({ error: err.message });
       }
-    },
   
+    
+    },
+
+    
     findByUser: async (user_id) => {
       try {
         const result = await pool.query(

@@ -89,3 +89,59 @@
       font-size: 1.5rem;
     }
   }
+
+  /* Add these styles to the end of your existing AddGame.css file */
+
+.success-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+.success-notification.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Additional styles to improve the form appearance */
+.add-game-form {
+  transition: all 0.3s ease;
+}
+
+.add-game-form input:focus {
+  transform: translateY(-2px);
+}
+
+.submit-button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Enhance the form interaction */
+.form-group label {
+  transition: color 0.3s ease;
+}
+
+.form-group input:focus + label {
+  color: #9B30FF;
+}
+
+/* Add a subtle animation to the form container */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.add-game-container {
+  animation: fadeIn 0.5s ease-out;
+}

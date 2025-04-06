@@ -5,6 +5,7 @@ import './AddGame.css';
 const AddGame = () => {
   const [name, setName] = useState('');
   const [genre, setGenre] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,13 +16,31 @@ const AddGame = () => {
     }
 
     try {
+      setIsSubmitting(true);
       await axios.post('http://localhost:5000/games', { name, genre });
-      alert("Game added successfully!");
       setName('');
       setGenre('');
+      
+      // Use a more elegant notification instead of alert
+      const notification = document.createElement('div');
+      notification.className = 'success-notification';
+      notification.textContent = 'Game added successfully!';
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.classList.add('show');
+      }, 10);
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => document.body.removeChild(notification), 300);
+      }, 3000);
+      
     } catch (error) {
       console.error('Error adding game:', error);
       alert("Failed to add game.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -49,7 +68,9 @@ const AddGame = () => {
             onChange={(e) => setGenre(e.target.value)} 
           />
         </div>
-        <button className="submit-button" type="submit">Add Game</button>
+        <button className="submit-button" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Adding...' : 'Add Game'}
+        </button>
       </form>
     </div>
   );

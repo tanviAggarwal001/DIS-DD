@@ -1,15 +1,31 @@
-import React from 'react'
+import React from 'react';
 import CreateTournament from '../components/CreateTournament';
 import { Link } from 'react-router-dom';
 import AllTournaments from '../components/AllTournaments';
+import './AdminTournaments.css';
+
 function UserTournaments() {
   return (
-    <div>
-       <Link to="/home">Dashboard</Link>
-       <CreateTournament/>
-       <AllTournaments/>
+    <div className="admin-tournaments-page">
+      <header className="admin-header">
+        <h1>Tournament Management</h1>
+        <Link to="/admin/dashboard" className="dashboard-link">
+          <span className="dashboard-icon">🏠</span> Dashboard
+        </Link>
+      </header>
+      
+      <div className="admin-content-container">
+        <div className="tournaments-grid">
+          <div className="create-tournament-column">
+            <CreateTournament />
+          </div>
+          <div className="view-tournaments-column">
+            <AllTournaments />
+          </div>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default UserTournaments
+export default UserTournaments;

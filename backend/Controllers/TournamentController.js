@@ -23,13 +23,14 @@ exports.deleteTournament = async (req, res) => {
 
 exports.getAllTournaments = async (req, res) => {
   try {
+    await Tournament.updateStatuses(); 
     const tournaments = await Tournament.findAll();
-    console.log("hehe")
     res.json(tournaments);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 exports.editTournament = async (req, res) => {
   try {

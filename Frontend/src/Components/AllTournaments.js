@@ -4,6 +4,8 @@ import './AllTournaments.css';
 
 const AllTournaments = () => {
   const [tournaments, setTournaments] = useState([]);
+  const [selectedPlayers, setSelectedPlayers] = useState([]);
+  const [showPlayersFor, setShowPlayersFor] = useState(null);
 
   const fetchTournaments = async () => {
     try {
@@ -11,6 +13,16 @@ const AllTournaments = () => {
       setTournaments(res.data);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const fetchRegisteredPlayers = async (tournamentId) => {
+    try {
+      const res = await axios.get(`http://localhost:5000/participants/registered/${tournamentId}`);
+      setSelectedPlayers(res.data);
+      setShowPlayersFor(tournamentId);
+    } catch (err) {
+      console.error('Error fetching players:', err);
     }
   };
 
@@ -70,11 +82,30 @@ const AllTournaments = () => {
               <td>
                 <button className="edit-button" onClick={() => handleEdit(tournament.id)}>✏️ Edit</button>
                 <button className="delete-button" onClick={() => handleDelete(tournament.id)}>🗑️ Delete</button>
+                <button className="view-button" onClick={() => fetchRegisteredPlayers(tournament.id)}>👥 View Players</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {showPlayersFor && (
+        <div className="registered-players-container">
+          <h3>Registered Players for Tournament ID: {showPlayersFor}</h3>
+          {selectedPlayers.length === 0 ? (
+            <p>No players registered.</p>
+          ) : (
+            <ul>
+              {selectedPlayers.map((player, index) => (
+                <li key={index}>
+                  {player.name} {player.rank ? `- Rank: ${player.rank}` : ''}
+                </li>
+              ))}
+            </ul>
+          )}
+          <button className="close-button" onClick={() => setShowPlayersFor(null)}>Close</button>
+        </div>
+      )}
     </div>
   );
 };

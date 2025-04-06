@@ -10,8 +10,10 @@ const initializeUsersTable = async () => {
         email VARCHAR(100) NOT NULL UNIQUE,
         password VARCHAR(100) NOT NULL,
         role VARCHAR(20) DEFAULT 'user',
+        rank VARCHAR(50)  DEFAULT 'unranked', 
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+
     `);
     console.log("Users table initialized");
    

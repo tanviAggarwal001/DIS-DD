@@ -1,129 +1,198 @@
 .all-tournaments-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: rgba(26, 26, 26, 0.9);
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(138, 43, 226, 0.2);
-    transition: transform 0.3s ease;
-    color: #FFFFFF;
-    position: relative;
-    z-index: 2;
-  }
-  
-  .all-tournaments-container:hover {
-    border-color: rgba(138, 43, 226, 0.5);
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: rgba(26, 26, 26, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  transition: transform 0.3s ease;
+  color: #FFFFFF;
+  position: relative;
+  z-index: 2;
+}
+
+.all-tournaments-container:hover {
+  border-color: rgba(138, 43, 226, 0.5);
+}
+
+.all-tournaments-container h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #8A2BE2;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.all-tournaments-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.all-tournaments-table thead {
+  background-color: rgba(138, 43, 226, 0.3);
+}
+
+.all-tournaments-table th,
+.all-tournaments-table td {
+  text-align: left;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+}
+
+.all-tournaments-table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8A2BE2;
+}
+
+.all-tournaments-table tr:hover {
+  background-color: rgba(138, 43, 226, 0.1);
+}
+
+.all-tournaments-table tr:last-child td {
+  border-bottom: none;
+}
+
+.edit-button,
+.delete-button,
+.view-button {
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.edit-button {
+  background-color: #8A2BE2;
+  color: white;
+}
+
+.edit-button:hover {
+  background-color: #9B30FF;
+}
+
+.delete-button {
+  background-color: rgba(244, 67, 54, 0.8);
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #F44336;
+}
+
+.view-button {
+  background-color: rgba(33, 150, 243, 0.8);
+  color: white;
+}
+
+.view-button:hover {
+  background-color: #2196F3;
+}
+
+/* Registered players container */
+.registered-players-container {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: rgba(26, 26, 26, 0.95);
+  border-radius: 10px;
+  border: 1px solid rgba(138, 43, 226, 0.3);
+}
+
+.registered-players-container h3 {
+  color: #8A2BE2;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.registered-players-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.registered-players-container li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+}
+
+.registered-players-container li:last-child {
+  border-bottom: none;
+}
+
+.close-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: rgba(138, 43, 226, 0.8);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.close-button:hover {
+  background-color: #8A2BE2;
+}
+
+/* Empty state */
+.all-tournaments-table tbody:empty::after {
+  content: "No tournaments found";
+  display: block;
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .all-tournaments-container {
+    padding: 1.5rem;
+    margin: 1rem;
   }
   
   .all-tournaments-container h2 {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: #8A2BE2;
-    font-size: 2rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    font-size: 1.5rem;
   }
   
   .all-tournaments-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1.5rem;
-    overflow: hidden;
-    border-radius: 10px;
-  }
-  
-  .all-tournaments-table thead {
-    background-color: rgba(138, 43, 226, 0.3);
+    display: block;
+    overflow-x: auto;
   }
   
   .all-tournaments-table th,
   .all-tournaments-table td {
-    text-align: left;
-    padding: 1rem;
-    border-bottom: 1px solid rgba(138, 43, 226, 0.2);
-  }
-  
-  .all-tournaments-table th {
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #8A2BE2;
-  }
-  
-  .all-tournaments-table tr:hover {
-    background-color: rgba(138, 43, 226, 0.1);
-  }
-  
-  .all-tournaments-table tr:last-child td {
-    border-bottom: none;
+    padding: 0.75rem;
+    font-size: 0.9rem;
   }
   
   .edit-button,
-  .delete-button {
-    padding: 0.5rem 1rem;
-    margin-right: 0.5rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
+  .delete-button,
+  .view-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
   }
   
-  .edit-button {
-    background-color: #8A2BE2;
-    color: white;
+  .registered-players-container h3 {
+    font-size: 1.2rem;
   }
   
-  .edit-button:hover {
-    background-color: #9B30FF;
+  .registered-players-container li {
+    font-size: 0.9rem;
   }
   
-  .delete-button {
-    background-color: rgba(244, 67, 54, 0.8);
-    color: white;
+  .close-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
   }
-  
-  .delete-button:hover {
-    background-color: #F44336;
-  }
-  
-  /* Empty state */
-  .all-tournaments-table tbody:empty::after {
-    content: "No tournaments found";
-    display: block;
-    text-align: center;
-    padding: 2rem;
-    color: rgba(255, 255, 255, 0.7);
-    font-style: italic;
-  }
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .all-tournaments-container {
-      padding: 1.5rem;
-      margin: 1rem;
-    }
-    
-    .all-tournaments-container h2 {
-      font-size: 1.5rem;
-    }
-    
-    .all-tournaments-table {
-      display: block;
-      overflow-x: auto;
-    }
-    
-    .all-tournaments-table th,
-    .all-tournaments-table td {
-      padding: 0.75rem;
-      font-size: 0.9rem;
-    }
-    
-    .edit-button,
-    .delete-button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.8rem;
-    }
-  }
+}

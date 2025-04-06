@@ -70,6 +70,7 @@ const UpcomingTournaments = () => {
             <th>Game</th>
             <th>Start Date</th>
             <th>End Date</th>
+            <th>Status</th> {/* ✅ New Status Column */}
             <th>Action</th>
           </tr>
         </thead>
@@ -80,6 +81,9 @@ const UpcomingTournaments = () => {
               <td>{tournament.game_id}</td>
               <td>{tournament.start_date}</td>
               <td>{tournament.end_date}</td>
+              <td>
+                <span className="status-upcoming">{tournament.status}</span>
+              </td>
               <td>
                 {!registered.includes(tournament.id) ? (
                   <button
