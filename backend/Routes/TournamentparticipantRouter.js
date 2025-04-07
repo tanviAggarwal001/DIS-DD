@@ -12,7 +12,7 @@ router.get('/registered/:tournamentId', async (req, res) => {
   
     try {
       const result = await pool.query(
-        `SELECT u.name, u.rank 
+        `SELECT u.name, u.rank , u.id
          FROM users u 
          JOIN "tournament_participants" tp ON u.id = tp.user_id 
          WHERE tp.tournament_id = $1`,

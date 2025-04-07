@@ -1,19 +1,21 @@
 const pool = require('./db');
 
-// Initialize matches table
+// Initialize matches table without problematic constraint functions
 const initializeMatchesTable = async () => {
   try {
+    // First create the table if it doesn't exist
     await pool.query(`
       CREATE TABLE IF NOT EXISTS matches (
         id SERIAL PRIMARY KEY,
         tournament_id INT REFERENCES tournaments(id) ON DELETE CASCADE,
-        player1_id INT REFERENCES users(id) ON DELETE CASCADE,
-        player2_id INT REFERENCES users(id) ON DELETE CASCADE,
+        player1_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        player2_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         scheduled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         winner_id INT REFERENCES users(id),
         status VARCHAR(20) DEFAULT 'scheduled'
       )
     `);
+    
     console.log("Matches table initialized");
   } catch (error) {
     console.error("Error initializing matches table:", error);
@@ -24,13 +26,30 @@ initializeMatchesTable();
 
 // 🏆 Match Model
 const matchModel = {
-  create: async (tournament_id, player1_id, player2_id, scheduled_at = null) => {
+  create: async (tournament_id, player1_id, player2_id) => {
     try {
+      // Ensure player1_id != player2_id before trying to insert
+      if (player1_id === player2_id) {
+        throw new Error("Cannot create a match with the same player twice");
+      }
+      
+      // Check if match already exists (in either order of players)
+      const existingMatch = await pool.query(
+        `SELECT id FROM matches 
+         WHERE tournament_id = $1 
+         AND ((player1_id = $2 AND player2_id = $3) OR (player1_id = $3 AND player2_id = $2))`,
+        [tournament_id, player1_id, player2_id]
+      );
+      
+      if (existingMatch.rows.length > 0) {
+        throw new Error("This match already exists in the tournament");
+      }
+      
       const result = await pool.query(
-        `INSERT INTO matches (tournament_id, player1_id, player2_id, scheduled_at)
-         VALUES ($1, $2, $3, COALESCE($4, CURRENT_TIMESTAMP))
+        `INSERT INTO matches (tournament_id, player1_id, player2_id) 
+         VALUES ($1, $2, $3) 
          RETURNING *`,
-        [tournament_id, player1_id, player2_id, scheduled_at]
+        [tournament_id, player1_id, player2_id]
       );
       return result.rows[0];
     } catch (error) {
@@ -38,7 +57,7 @@ const matchModel = {
       throw error;
     }
   },
-
+  
   findAll: async () => {
     try {
       const result = await pool.query(`SELECT * FROM matches ORDER BY scheduled_at ASC`);

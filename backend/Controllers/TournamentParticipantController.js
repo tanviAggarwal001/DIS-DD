@@ -2,6 +2,7 @@ const Participant = require('../Models/Tournamentparticipants');
 
 exports.register = async (req, res) => {
   try {
+    console.log("hehe1");
     const { tournament_id, user_id } = req.body;
     const entry = await Participant.register(tournament_id, user_id);
     res.status(201).json(entry);
