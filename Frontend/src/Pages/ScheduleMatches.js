@@ -54,8 +54,8 @@ const ScheduleMatch = () => {
     <>
     <header className="admin-header">
                 <h1>Game Management</h1>
-                <Link to="/admin/dashboard" className="dashboard-link">
-                    Back to Dashboard
+                <Link to="/admin/tournaments" className="dashboard-link">
+                    Back to Tournaments
                 </Link>
             </header>
     <div className="schedule-match-container">

@@ -55,7 +55,6 @@ const AdminDashboard = () => {
           </div>
         </section>
 
-
         <section className="admin-dashboard">
           <h2>Admin Control Panel</h2>
           <div className="dashboard-grid">
@@ -66,7 +65,7 @@ const AdminDashboard = () => {
                 <li>Manage existing tournaments</li>
                 <li>Approve tournament requests</li>
               </ul>
-              <button className="action-button">Manage Tournaments</button>
+              <Link to="/admin/tournaments" className="action-button">Manage Tournaments</Link>
             </div>
             <div className="dashboard-card">
               <h3>User Management</h3>
@@ -75,7 +74,7 @@ const AdminDashboard = () => {
                 <li>Ban/unban users</li>
                 <li>Manage user roles</li>
               </ul>
-              <button className="action-button">Manage Users</button>
+              <Link to="/admin/users" className="action-button">Manage Users</Link>
             </div>
             <div className="dashboard-card">
               <h3>Game Management</h3>
@@ -84,10 +83,11 @@ const AdminDashboard = () => {
                 <li>Update game details</li>
                 <li>Manage game categories</li>
               </ul>
-              <button className="action-button">Manage Games</button>
+              <Link to="/admin/games" className="action-button">Manage Games</Link>
             </div>
           </div>
         </section>
+
       </main>
     </div>
   );

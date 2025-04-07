@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { handleSuccess } from "../utils"; 
+import { handleSuccess } from "../utils";
 import './Home.css';
 
 function Home() {
@@ -22,8 +22,8 @@ function Home() {
   };
 
 
-return (
-<div className="home-container">
+  return (
+    <div className="home-container">
       <nav className="home-nav">
         <div className="nav-brand">
           <span className="brand-text">DOSA DOMINATORS</span>
@@ -35,7 +35,7 @@ return (
           <Link to="/games" className="nav-link">Games</Link>
         </div>
         <div className="nav-actions">
-          <button 
+          <button
             className="logout-button"
             onClick={handleLogout}
           >
@@ -54,39 +54,40 @@ return (
           </div>
         </section>
 
-      
-          <section className="user-dashboard">
-            <h2>Player Dashboard</h2>
-            <div className="dashboard-grid">
-              <div className="dashboard-card">
-                <h3>My Tournaments</h3>
-                <ul>
-                  <li>Upcoming tournaments</li>
-                  <li>Active tournaments</li>
-                  <li>Tournament history</li>
-                </ul>
-                <button className="action-button">View All</button>
-              </div>
-              <div className="dashboard-card">
-                <h3>My Stats</h3>
-                <ul>
-                  <li>Win rate: 65%</li>
-                  <li>Tournaments won: 12</li>
-                  <li>Current rank: Diamond</li>
-                </ul>
-                <button className="action-button">View Details</button>
-              </div>
-              <div className="dashboard-card">
-                <h3>Quick Actions</h3>
-                <ul>
-                  <li>Join a tournament</li>
-                  <li>View leaderboard</li>
-                  <li>Update profile</li>
-                </ul>
-                <button className="action-button">View More</button>
-              </div>
+        <section className="user-dashboard">
+          <h2>Player Dashboard</h2>
+          <div className="dashboard-grid">
+            <div className="dashboard-card">
+              <h3>My Tournaments</h3>
+              <ul>
+                <li>Upcoming tournaments</li>
+                <li>Active tournaments</li>
+                <li>Tournament history</li>
+                <li>Join a Tournament</li>
+              </ul>
+              <Link to="/tournaments" className="action-button">View All</Link>
             </div>
-          </section>
+            <div className="dashboard-card">
+              <h3>My Stats</h3>
+              <ul>
+                <li>Win rate: 65%</li>
+                <li>Tournaments won: 12</li>
+                <li>Current rank: Diamond</li>
+              </ul>
+              <Link to="/mystats" className="action-button">View Details</Link>
+            </div>
+            {/* <div className="dashboard-card">
+              <h3>Quick Actions</h3>
+              <ul>
+                <li>Join a tournament</li>
+                <li>View leaderboard</li>
+                <li>Update profile</li>
+              </ul>
+              <Link to="/quickactions" className="action-button">View More</Link>
+            </div> */}
+          </div>
+        </section>
+
       </main>
     </div>
   );

@@ -1,47 +1,112 @@
 :root {
-    --primary-color: #8A2BE2;
-    --secondary-color: #6A0DAD;
-    --background-color: #121212;
-    --text-color: #FFFFFF;
-    --card-bg: #1A1A1A;
-    --border-color: #333333;
-    --success-color: #4CAF50;
-    --danger-color: #F44336;
+  --primary-color: #8A2BE2;
+  --secondary-color: #6A0DAD;
+  --background-color: #121212;
+  --text-color: #FFFFFF;
+  --card-bg: #1A1A1A;
+  --border-color: #333333;
+  --success-color: #4CAF50;
+  --danger-color: #F44336;
+}
+
+.admin-dashboard {
+  padding: 2rem 0;
+  color: var(--text-color);
+}
+
+.admin-dashboard h2 {
+  text-align: center;
+  color: var(--primary-color);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: var(--card-bg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.admin-header h1 {
+  margin: 0;
+  color: var(--primary-color);
+}
+
+.admin-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logout-button {
+  background-color: var(--danger-color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+/* Add styling for the admin dashboard cards to match the overall theme */
+.admin-dashboard .dashboard-card {
+  background: rgba(26, 26, 26, 0.9);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(138, 43, 226, 0.2);
+}
+
+.admin-dashboard .dashboard-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(138, 43, 226, 0.5);
+}
+
+.admin-dashboard .dashboard-card h3 {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+}
+
+.admin-dashboard .dashboard-card ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+}
+
+.admin-dashboard .dashboard-card li {
+  margin: 0.8rem 0;
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+
+.admin-dashboard .action-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.admin-dashboard .action-button:hover {
+  background-color: var(--secondary-color);
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard .dashboard-card {
+    padding: 1.5rem;
   }
-  
-  .admin-dashboard {
-    min-height: 100vh;
-    background-color: var(--background-color);
-    color: var(--text-color);
-  }
-  
-  .admin-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: var(--card-bg);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  }
-  
-  .admin-header h1 {
-    margin: 0;
-    color: var(--primary-color);
-  }
-  
-  .admin-info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-  
-  .logout-button {
-    background-color: var(--danger-color);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
+}

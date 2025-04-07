@@ -26,9 +26,12 @@ const UserGameList = () => {
 
     return (
         <>
-            <div>
-                <Link to="/home">Dashboard</Link>
-            </div>
+           <header className="admin-header">
+                <h1>Game Management</h1>
+                <Link to="/home" className="dashboard-link">
+                    Back to Dashboard
+                </Link>
+            </header>
             <div className="game-list-container">
                 <h2>Game Library</h2>
 
