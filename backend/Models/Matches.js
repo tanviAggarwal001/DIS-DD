@@ -108,7 +108,30 @@ const matchModel = {
       throw error;
     }
   },
-
+  findByUserWithDetails: async (userId) => {
+    try {
+      const result = await pool.query(`
+        SELECT 
+          M.*, 
+          U1.name AS player1_name, 
+          U2.name AS player2_name, 
+          T.name AS tournament_name
+        FROM matches M
+        INNER JOIN users U1 ON M.player1_id = U1.id
+        INNER JOIN users U2 ON M.player2_id = U2.id
+        INNER JOIN tournaments T ON M.tournament_id = T.id
+        WHERE M.player1_id = $1 OR M.player2_id = $1
+        ORDER BY M.scheduled_at ASC
+      `, [userId]);
+  
+      return result.rows;
+    } catch (error) {
+      console.error("Error fetching matches with user details:", error);
+      throw error;
+    }
+  },
+  
+  
   delete: async (id) => {
     try {
       `await pool.query(DELETE FROM matches WHERE id = $1, [id])`;

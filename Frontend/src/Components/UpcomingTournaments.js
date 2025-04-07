@@ -1,45 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Usertournaments.css'; 
+import { Link } from 'react-router-dom';
 
 const UpcomingTournaments = () => {
   const [tournaments, setTournaments] = useState([]);
   const [registered, setRegistered] = useState([]);
-  const [logginUser, setLogginUser] = useState("");
-  const [userId, setuserId] = useState(1);
+  const [userId, setUserId] = useState(null);
+  const [selectedTournamentId, setSelectedTournamentId] = useState(null);
+  const [tournamentMatches, setTournamentMatches] = useState([]);
 
+  // Fetch userId from localStorage on mount
   useEffect(() => {
     const storedUsername = localStorage.getItem("LogginUser");
-    setLogginUser(storedUsername);
-    console.log(storedUsername);
-
     if (storedUsername) {
       axios
         .get(`http://localhost:5000/user-id/${storedUsername}`)
-        .then((res) => setuserId(parseInt(res.data.id)))
+        .then((res) => {
+          setUserId(parseInt(res.data.id));
+        })
         .catch((err) => console.error("Error fetching user ID:", err));
     }
   }, []);
 
-  const fetchTournaments = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/tournaments');
-      const upcoming = res.data.filter(t => t.status === 'upcoming');
-      setTournaments(upcoming);
-    } catch (err) {
-      console.error('Error fetching tournaments:', err);
-    }
-  };
+  // Fetch tournaments and registrations once userId is available
+  useEffect(() => {
+    if (!userId) return;
 
-  const fetchRegistrations = async () => {
-    try {
-      const res = await axios.get(`http://localhost:5000/participants/${userId}`);
-      const registeredIds = res.data.map(r => r.tournament_id);
-      setRegistered(registeredIds);
-    } catch (err) {
-      console.error('Error fetching registrations:', err);
-    }
-  };
+    const fetchTournaments = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/tournaments');
+        const upcoming = res.data.filter(t => t.status === 'upcoming');
+        setTournaments(upcoming);
+      } catch (err) {
+        console.error('Error fetching tournaments:', err);
+      }
+    };
+
+    const fetchRegistrations = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/participants/${userId}`);
+        const registeredIds = res.data.map(r => r.tournament_id);
+        setRegistered(registeredIds);
+      } catch (err) {
+        console.error('Error fetching registrations:', err);
+      }
+    };
+
+    fetchTournaments();
+    fetchRegistrations();
+  }, [userId]);
 
   const handleRegister = async (tournamentId) => {
     try {
@@ -47,18 +57,30 @@ const UpcomingTournaments = () => {
         tournament_id: tournamentId,
         user_id: userId,
       });
-      setRegistered([...registered, tournamentId]);
+      setRegistered(prev => [...prev, tournamentId]);
     } catch (err) {
       console.error('Registration failed:', err);
     }
   };
 
-  useEffect(() => {
-    if (userId) {
-      fetchTournaments();
-      fetchRegistrations();
+  const handleViewMatch = async (tournamentId) => {
+    if (selectedTournamentId === tournamentId) {
+      // toggle off
+      setSelectedTournamentId(null);
+      setTournamentMatches([]);
+      return;
     }
-  }, [userId]);
+
+    try {
+      const res = await axios.get(`http://localhost:5000/matches/user/${userId}`);
+      const filtered = res.data.filter(m => m.tournament_id === tournamentId);
+      setTournamentMatches(filtered);
+      // console.log(filtered);
+      setSelectedTournamentId(tournamentId);
+    } catch (err) {
+      console.error("Error fetching matches:", err);
+    }
+  };
 
   return (
     <div className="upcoming-tournaments-container">
@@ -70,33 +92,78 @@ const UpcomingTournaments = () => {
             <th>Game</th>
             <th>Start Date</th>
             <th>End Date</th>
-            <th>Status</th> {/* ✅ New Status Column */}
+            <th>Status</th>
             <th>Action</th>
+            <th>View Match</th>
           </tr>
         </thead>
         <tbody>
           {tournaments.map((tournament) => (
-            <tr key={tournament.id}>
-              <td>{tournament.name}</td>
-              <td>{tournament.game_id}</td>
-              <td>{tournament.start_date}</td>
-              <td>{tournament.end_date}</td>
-              <td>
-                <span className="status-upcoming">{tournament.status}</span>
-              </td>
-              <td>
-                {!registered.includes(tournament.id) ? (
+            <React.Fragment key={tournament.id}>
+              <tr>
+                <td>{tournament.name}</td>
+                <td>{tournament.game_id}</td>
+                <td>{new Date(tournament.start_date).toLocaleDateString()}</td>
+                <td>{new Date(tournament.end_date).toLocaleDateString()}</td>
+                <td>
+                  <span className="status-upcoming">{tournament.status}</span>
+                </td>
+                <td>
+                  {!registered.includes(tournament.id) ? (
+                    <button
+                      onClick={() => handleRegister(tournament.id)}
+                      className="register-button"
+                    >
+                      Register
+                    </button>
+                  ) : (
+                    <span className="registered-text">Registered</span>
+                  )}
+                </td>
+                <td>
                   <button
-                    onClick={() => handleRegister(tournament.id)}
-                    className="register-button"
+                    className="view-match-button"
+                    onClick={() => handleViewMatch(tournament.id)}
                   >
-                    Register
+                    {selectedTournamentId === tournament.id ? "Hide Matches" : "View Match"}
                   </button>
-                ) : (
-                  <span className="registered-text">Registered</span>
-                )}
-              </td>
-            </tr>
+                </td>
+              </tr>
+
+              {selectedTournamentId === tournament.id && (
+                <tr>
+                  <td colSpan="7">
+                    {tournamentMatches.length === 0 ? (
+                      <p>No scheduled matches yet for this tournament.</p>
+                    ) : (
+                      <table className="match-subtable">
+                        <thead>
+                          <tr>
+                            <th>Opponent</th>
+                            <th>Status</th>
+                            <th>Scheduled At</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {tournamentMatches.map((match) => {
+                            const isPlayer1 = match.player1_id === userId;
+                            const opponent = isPlayer1 ? match.player2_name : match.player1_name;
+
+                            return (
+                              <tr key={match.id}>
+                                <td>{opponent}</td>
+                                <td>{match.status}</td>
+                                <td>{match.scheduled_at ? new Date(match.scheduled_at).toLocaleString() : 'TBD'}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    )}
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
           ))}
         </tbody>
       </table>
