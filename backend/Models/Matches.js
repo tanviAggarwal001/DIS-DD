@@ -108,6 +108,8 @@ const matchModel = {
       throw error;
     }
   },
+
+  
   findByUserWithDetails: async (userId) => {
     try {
       const result = await pool.query(`
@@ -130,6 +132,28 @@ const matchModel = {
       throw error;
     }
   },
+
+  findByTournamentWithUsernames: async (tournamentId) => {
+    try {
+      const result = await pool.query(`
+        SELECT 
+          M.*, 
+          U1.name AS player1_name, 
+          U2.name AS player2_name
+        FROM matches M
+        INNER JOIN users U1 ON M.player1_id = U1.id
+        INNER JOIN users U2 ON M.player2_id = U2.id
+        WHERE M.tournament_id = $1
+        ORDER BY M.scheduled_at ASC
+      `, [tournamentId]);
+  
+      return result.rows;
+    } catch (error) {
+      console.error("Error fetching matches with usernames by tournament:", error);
+      throw error;
+    }
+  }
+,  
   
   
   delete: async (id) => {

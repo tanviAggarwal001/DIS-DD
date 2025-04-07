@@ -1,4 +1,6 @@
 const matchModel = require('../Models/Matches');
+const scoreModel = require('../Models/Score');
+const pool = require('../Models/db');
 
 // 1. Create a new match
 exports.create = async (req, res) => {
@@ -38,7 +40,39 @@ exports.getByUser = async (req, res) => {
   }
 };
 
+exports.submitResult = async (req, res) => {
+  const matchId = req.params.matchId;
+  const { player1_id, player1_score, player2_id, player2_score } = req.body;
 
+  try {
+    // Insert or update player scores
+    await pool.query(`
+      INSERT INTO scores (match_id, player_id, score)
+      VALUES 
+        ($1, $2, $3),
+        ($1, $4, $5)
+      ON CONFLICT (match_id, player_id) DO UPDATE
+      SET score = EXCLUDED.score;
+    `, [matchId, player1_id, player1_score, player2_id, player2_score]);
+
+    // Determine winner
+    let winner_id = null;
+    if (player1_score > player2_score) winner_id = player1_id;
+    else if (player2_score > player1_score) winner_id = player2_id;
+
+    // Update match status and winner
+    await pool.query(`
+      UPDATE matches
+      SET winner_id = $1, status = 'completed'
+      WHERE id = $2
+    `, [winner_id, matchId]);
+
+    res.status(200).json({ message: 'Result submitted successfully' });
+  } catch (error) {
+    console.error("Error submitting match result:", error);
+    res.status(500).json({ error: 'Failed to submit result' });
+  }
+};
 // 4. Set match winner
 exports.setWinner = async (req, res) => {
   const { matchId } = req.params;
