@@ -7,6 +7,13 @@ const AllTournaments = () => {
   const [tournaments, setTournaments] = useState([]);
   const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [showPlayersFor, setShowPlayersFor] = useState(null);
+  const [showMatchesFor, setShowMatchesFor] = useState(null);
+  const [matches, setMatches] = useState([]);
+  const [scoreInputs, setScoreInputs] = useState({});
+
+  useEffect(() => {
+    fetchTournaments();
+  }, []);
 
   const fetchTournaments = async () => {
     try {
@@ -27,16 +34,13 @@ const AllTournaments = () => {
     }
   };
 
-  useEffect(() => {
-    fetchTournaments();
-  }, []);
-
-  const handleDelete = async (id) => {
+  const fetchMatches = async (tournamentId) => {
     try {
-      await axios.delete(`http://localhost:5000/tournaments/${id}`);
-      fetchTournaments();
+      const res = await axios.get(`http://localhost:5000/matches/tournament/${tournamentId}`);
+      setMatches(res.data);
+      setShowMatchesFor(tournamentId);
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching matches:', err);
     }
   };
 
@@ -58,6 +62,48 @@ const AllTournaments = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/tournaments/${id}`);
+      fetchTournaments();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleScoreChange = (matchId, field, value) => {
+    setScoreInputs(prev => ({
+      ...prev,
+      [matchId]: {
+        ...prev[matchId],
+        [field]: Number(value)
+      }
+    }));
+  };
+
+  const submitResult = async (match) => {
+    const inputs = scoreInputs[match.id];
+    if (!inputs?.player1_score || !inputs?.player2_score) {
+      alert('Enter scores for both players');
+      return;
+    }
+
+    try {
+      await axios.put(`http://localhost:5000/matches/${match.id}/submit-result`, {
+        player1_id: match.player1_id,
+        player2_id: match.player2_id,
+        player1_score: inputs.player1_score,
+        player2_score: inputs.player2_score
+      });
+
+      alert('Score submitted!');
+      fetchMatches(showMatchesFor);
+    } catch (err) {
+      console.error('Error submitting score:', err);
+      // alert('Failed to submit score');
+    }
+  };
+
   return (
     <div className="all-tournaments-container">
       <h2>All Tournaments</h2>
@@ -73,6 +119,7 @@ const AllTournaments = () => {
             <th>Delete</th>
             <th>View Players</th>
             <th>Schedule Matches</th>
+            <th>View Matches</th>
           </tr>
         </thead>
         <tbody>
@@ -83,18 +130,11 @@ const AllTournaments = () => {
               <td>{tournament.start_date}</td>
               <td>{tournament.end_date}</td>
               <td>{tournament.status}</td>
-              <td>
-                <button className="edit-button" onClick={() => handleEdit(tournament.id)}>✏️ Edit</button>
-              </td>
-              <td>
-                <button className="delete-button" onClick={() => handleDelete(tournament.id)}>🗑️ Delete</button>
-              </td>
-              <td>
-                <button className="view-button" onClick={() => fetchRegisteredPlayers(tournament.id)}>👥 View Players</button>
-              </td>
-              <td>
-                <Link to={`/schedule-match/${tournament.id}`}>Schedule Match</Link>
-              </td>
+              <td><button onClick={() => handleEdit(tournament.id)}>✏️</button></td>
+              <td><button onClick={() => handleDelete(tournament.id)}>🗑️</button></td>
+              <td><button onClick={() => fetchRegisteredPlayers(tournament.id)}>👥</button></td>
+              <td><Link to={`/schedule-match/${tournament.id}`}>Schedule</Link></td>
+              <td><button onClick={() => fetchMatches(tournament.id)}>📋 Matches</button></td>
             </tr>
           ))}
         </tbody>
@@ -109,12 +149,61 @@ const AllTournaments = () => {
             <ul>
               {selectedPlayers.map((player, index) => (
                 <li key={index}>
-                  {player.name} {player.rank ? `- Rank: ${player.rank}` : ''}
+                  {player.name} {player.rank ? ` - Rank: ${player.rank}` : ''}
                 </li>
               ))}
             </ul>
           )}
-          <button className="close-button" onClick={() => setShowPlayersFor(null)}>Close</button>
+          <button onClick={() => setShowPlayersFor(null)}>Close</button>
+        </div>
+      )}
+
+      {showMatchesFor && (
+        <div className="match-schedule-container">
+          <h3>Matches for Tournament ID: {showMatchesFor}</h3>
+          {matches.length === 0 ? (
+            <p>No matches scheduled.</p>
+          ) : (
+            <table className="match-table">
+              <thead>
+                <tr>
+                  <th>Player 1</th>
+                  <th>Player 2</th>
+                  <th>Score</th>
+                  <th>Submit Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {matches.map((match) => (
+                  <tr key={match.id}>
+                    <td>{match.player1_name}</td>
+                    <td>{match.player2_name}</td>
+                    <td>{match.score || 'Not submitted'}</td>
+                    <td>
+                      {match.status === 'completed' ? (
+                        <span>✅ Done</span>
+                      ) : (
+                        <>
+                          <input
+                            type="number"
+                            placeholder="P1"
+                            onChange={(e) => handleScoreChange(match.id, 'player1_score', e.target.value)}
+                          />
+                          <input
+                            type="number"
+                            placeholder="P2"
+                            onChange={(e) => handleScoreChange(match.id, 'player2_score', e.target.value)}
+                          />
+                          <button onClick={() => submitResult(match)}>Submit</button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          <button onClick={() => setShowMatchesFor(null)}>Close Matches</button>
         </div>
       )}
     </div>
