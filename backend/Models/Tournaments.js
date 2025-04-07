@@ -29,6 +29,8 @@ const tournamentModel = {
   create: async (name, game_id, start_date, end_date, created_by, members_per_match) => {
     try {
       console.log("came to models");
+      game_id = parseInt(game_id);
+      console.log(typeof game_id, game_id);
   
       const currentDate = new Date();
       const sDate = new Date(start_date);
@@ -40,11 +42,21 @@ const tournamentModel = {
       } else if (currentDate > eDate) {
         status = 'completed';
       }
-  
+      console.log({
+        name,
+        game_id,
+        parsedGameId: parseInt(game_id),
+        start_date,
+        end_date,
+        created_by,
+        members_per_match,
+        parsedMembers: parseInt(members_per_match),
+        status
+      });
       const result = await pool.query(
         `INSERT INTO tournaments (name, game_id, start_date, end_date, created_by, members_per_match, status)
          VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-        [name, game_id, start_date, end_date, created_by, members_per_match, status]
+        [name, parseInt(game_id), start_date, end_date, created_by, parseInt(members_per_match), status]
       );
   
       return result.rows[0];

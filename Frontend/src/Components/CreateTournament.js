@@ -14,23 +14,12 @@ const CreateTournament = ({ onTournamentAdded }) => {
 
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [logginUser, setLogginUser] = useState("");
   const [creatorId, setCreatorId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Replace with logic to fetch from localStorage or session
     setCreatorId(2);
-    // const storedUsername = localStorage.getItem("adminUsername");
-    // setLogginUser(storedUsername);
-    // console.log(storedUsername);
-
-    // if (storedUsername) {
-    //   axios
-    //     .get(`http://localhost:5000/admin-id/${storedUsername}`)
-    //     .then((res) => setCreatorId(parseInt(res.data.id))
-    //   )
-    //     .catch((err) => console.error("Error fetching user ID:", err));
-    // }
   }, []);
 
   useEffect(() => {
@@ -51,24 +40,34 @@ const CreateTournament = ({ onTournamentAdded }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // creatr_id = parseInt(creater_id);
 
     const { name, game_id, start_date, end_date, members_per_match } = tournamentData;
-    console.log("id is " , creatorId);
+
     if (!name || !game_id || !start_date || !end_date || !members_per_match || !creatorId) {
       alert("Please fill in all fields.");
       return;
     }
 
+    const parsedGameId = parseInt(game_id, 10);
+    const parsedMembers = parseInt(members_per_match, 10);
+
+    if (isNaN(parsedGameId) || isNaN(parsedMembers)) {
+      alert("Game ID and Members per Match must be valid numbers.");
+      return;
+    }
+
     const payload = {
-      ...tournamentData,
-      name: tournamentData.name.trim(),
+      name: name.trim(),
+      game_id: parseInt(game_id),
+      start_date,
+      end_date,
+      members_per_match: parsedMembers,
       created_by: creatorId,
     };
-    
 
     setLoading(true);
     try {
+      console.log(typeof game_id, game_id);
       const response = await axios.post("http://localhost:5000/tournaments/create", payload);
       alert("Tournament created successfully!");
       setTournamentData({
@@ -100,12 +99,18 @@ const CreateTournament = ({ onTournamentAdded }) => {
           required
         />
 
-        <select name="game_id" value={tournamentData.game_id} onChange={handleChange} required>
+        <select
+          name="game_id"
+          value={tournamentData.game_id}
+          onChange={handleChange}
+          required
+        >
           <option value="">Select Game</option>
           {games.map((game) => (
             <option key={game.id} value={game.id}>
-              {game.name}
-            </option>
+            {game.name}
+          </option>
+          
           ))}
         </select>
 
