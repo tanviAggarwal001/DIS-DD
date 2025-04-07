@@ -6,6 +6,7 @@ import './Home.css';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+
   useEffect(() => {
     const adminToken = localStorage.getItem('adminToken');
     if (!adminToken) {

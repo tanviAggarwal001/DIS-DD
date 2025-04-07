@@ -111,7 +111,7 @@ const matchModel = {
 
   delete: async (id) => {
     try {
-      await pool.query(`DELETE FROM matches WHERE id = $1`, [id]);
+      `await pool.query(DELETE FROM matches WHERE id = $1, [id])`;
       return { message: 'Match deleted successfully' };
     } catch (error) {
       console.error("Error deleting match:", error);

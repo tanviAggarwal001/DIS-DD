@@ -1,7 +1,7 @@
 import React from 'react';
-import CreateTournament from '../components/CreateTournament';
+import CreateTournament from '../Components/CreateTournament';
 import { Link } from 'react-router-dom';
-import AllTournaments from '../components/AllTournaments';
+import AllTournaments from '../Components/AllTournaments';
 import './AdminTournaments.css';
 
 function UserTournaments() {
