@@ -13,6 +13,7 @@ import AdminTournaments from './Pages/AdminTournaments';
 import UserTournamentsPage from './Pages/UserTournamentsPage';
 import ScheduleMatch from './Pages/ScheduleMatches';
 import MyMatchSchedules from './Components/MyMatchSchedule';
+import MyStats from './Pages/Mystats';
 
 
 function App() {
@@ -52,8 +53,9 @@ function App() {
         <Route path='/admin/dashboard' element={<AdminRoute element={<AdminDashboard/>}/>} />
 
         <Route path='/games' element={<UserGameList/>} />
-
         <Route path='/tournaments' element={<UserTournamentsPage/>} />
+        <Route path='/mystats' element={<MyStats/>} />
+
         <Route path='/admin/tournaments' element={<AdminTournaments/>} />
         <Route path='/admin/games' element={<AdminGames/>} />
 

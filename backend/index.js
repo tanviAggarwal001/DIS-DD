@@ -12,6 +12,7 @@ const gameRouters =  require("./Routes/GameRouter")
 const tournamentRouters = require("./Routes/TornamentRouter")
 const tournamentParticipantsRouters = require("./Routes/TournamentparticipantRouter")
 const matchRouters = require("./Routes/MatchRouter");
+const scoreRoutes = require("./Routes/ScoresRouters")
 const user = require("./Models/Admins");
 const user2 = require("./Models/Users");
 // const myResumeRouters = require("./Routes/ResumeRouter");
@@ -27,6 +28,7 @@ app.use("/admin", adminRouters);
 app.use("/games", gameRouters);
 app.use("/tournaments", tournamentRouters);
 app.use("/matches", matchRouters);
+app.use("/scores", scoreRoutes);
 app.use("/participants", tournamentParticipantsRouters);
 app.get('/admin-id/:username', user.getUserIdByUsername);
 app.get('/user-id/:username', user2.getUserIdByUsername);

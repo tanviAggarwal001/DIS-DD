@@ -100,7 +100,6 @@ const AllTournaments = () => {
       fetchMatches(showMatchesFor);
     } catch (err) {
       console.error('Error submitting score:', err);
-      // alert('Failed to submit score');
     }
   };
 
@@ -170,7 +169,7 @@ const AllTournaments = () => {
                   <th>Player 1</th>
                   <th>Player 2</th>
                   <th>Score</th>
-                  <th>Submit Score</th>
+                  <th>Submit Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -178,7 +177,11 @@ const AllTournaments = () => {
                   <tr key={match.id}>
                     <td>{match.player1_name}</td>
                     <td>{match.player2_name}</td>
-                    <td>{match.score || 'Not submitted'}</td>
+                    <td>
+                      {match.status === 'completed' && match.player1_score != null && match.player2_score != null
+                        ? `${match.player1_score} - ${match.player2_score}`
+                        : 'Not submitted'}
+                    </td>
                     <td>
                       {match.status === 'completed' ? (
                         <span>✅ Done</span>
@@ -187,12 +190,16 @@ const AllTournaments = () => {
                           <input
                             type="number"
                             placeholder="P1"
-                            onChange={(e) => handleScoreChange(match.id, 'player1_score', e.target.value)}
+                            onChange={(e) =>
+                              handleScoreChange(match.id, 'player1_score', e.target.value)
+                            }
                           />
                           <input
                             type="number"
                             placeholder="P2"
-                            onChange={(e) => handleScoreChange(match.id, 'player2_score', e.target.value)}
+                            onChange={(e) =>
+                              handleScoreChange(match.id, 'player2_score', e.target.value)
+                            }
                           />
                           <button onClick={() => submitResult(match)}>Submit</button>
                         </>

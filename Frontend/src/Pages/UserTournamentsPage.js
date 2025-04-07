@@ -5,8 +5,13 @@ import { Link } from 'react-router-dom'
 function UserTournamentsPage() {
   return (
     <div>
-        <Link to="/home">Dashboard</Link>
-      <UpcomingTournaments/>
+      <header className="admin-header">
+        <h1>Game Management</h1>
+        <Link to="/home" className="dashboard-link">
+          Back to Dashboard
+        </Link>
+      </header>
+      <UpcomingTournaments />
     </div>
   )
 }

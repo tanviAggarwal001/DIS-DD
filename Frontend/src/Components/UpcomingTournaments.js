@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Usertournaments.css'; 
+import './Usertournaments.css';
 import { Link } from 'react-router-dom';
 
 const UpcomingTournaments = () => {
@@ -9,8 +9,8 @@ const UpcomingTournaments = () => {
   const [userId, setUserId] = useState(null);
   const [selectedTournamentId, setSelectedTournamentId] = useState(null);
   const [tournamentMatches, setTournamentMatches] = useState([]);
+  const [matchScores, setMatchScores] = useState({});
 
-  // Fetch userId from localStorage on mount
   useEffect(() => {
     const storedUsername = localStorage.getItem("LogginUser");
     if (storedUsername) {
@@ -23,7 +23,6 @@ const UpcomingTournaments = () => {
     }
   }, []);
 
-  // Fetch tournaments and registrations once userId is available
   useEffect(() => {
     if (!userId) return;
 
@@ -63,9 +62,26 @@ const UpcomingTournaments = () => {
     }
   };
 
+  const fetchMatchScores = async (matches) => {
+    const scoreMap = {};
+
+    for (const match of matches) {
+      if (match.status === 'completed') {
+        try {
+          const res = await axios.get(`http://localhost:5000/scores/match/${match.id}`);
+          scoreMap[match.id] = res.data;
+        } catch (err) {
+          console.error(`Error fetching score for match ${match.id}:`, err);
+          scoreMap[match.id] = null;
+        }
+      }
+    }
+
+    setMatchScores(scoreMap);
+  };
+
   const handleViewMatch = async (tournamentId) => {
     if (selectedTournamentId === tournamentId) {
-      // toggle off
       setSelectedTournamentId(null);
       setTournamentMatches([]);
       return;
@@ -75,8 +91,8 @@ const UpcomingTournaments = () => {
       const res = await axios.get(`http://localhost:5000/matches/user/${userId}`);
       const filtered = res.data.filter(m => m.tournament_id === tournamentId);
       setTournamentMatches(filtered);
-      // console.log(filtered);
       setSelectedTournamentId(tournamentId);
+      await fetchMatchScores(filtered);
     } catch (err) {
       console.error("Error fetching matches:", err);
     }
@@ -142,18 +158,44 @@ const UpcomingTournaments = () => {
                             <th>Opponent</th>
                             <th>Status</th>
                             <th>Scheduled At</th>
+                            <th>Results</th>
                           </tr>
                         </thead>
                         <tbody>
                           {tournamentMatches.map((match) => {
                             const isPlayer1 = match.player1_id === userId;
                             const opponent = isPlayer1 ? match.player2_name : match.player1_name;
+                            const scores = matchScores[match.id];
+
+                            let resultMessage = '';
+                            let finalScore = '';
+                            let winnerName = '';
+
+                            if (scores && scores.length === 2) {
+                              const playerScore = scores.find(s => s.player_id === userId)?.score ?? 0;
+                              const opponentScore = scores.find(s => s.player_id !== userId)?.score ?? 0;
+
+                              finalScore = `${playerScore} - ${opponentScore}`;
+                              winnerName = match.winner_id === userId ? "You" : scores.find(s => s.player_id === match.winner_id)?.username || 'Opponent';
+                              resultMessage = match.winner_id === userId ? "You won!" : "You lost!";
+                            }
 
                             return (
                               <tr key={match.id}>
                                 <td>{opponent}</td>
                                 <td>{match.status}</td>
                                 <td>{match.scheduled_at ? new Date(match.scheduled_at).toLocaleString() : 'TBD'}</td>
+                                <td>
+                                  {match.status === 'completed' && scores ? (
+                                    <>
+                                      <div><strong>Winner:</strong> {winnerName}</div>
+                                      <div><strong>Final Score:</strong> {finalScore}</div>
+                                      <div><em>{resultMessage}</em></div>
+                                    </>
+                                  ) : (
+                                    '—'
+                                  )}
+                                </td>
                               </tr>
                             );
                           })}
