@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { handleSuccess } from "../utils"; // Utility for showing success message
+import { handleSuccess } from "../utils"; 
 import './Home.css';
-import bgImage from './UI Assets/bg-image-valo1.png'
 
 function Home() {
   const [logginUser, setLogginUser] = useState("");
@@ -88,52 +87,9 @@ return (
               </div>
             </div>
           </section>
-       
-
-        <section className="featured-tournaments">
-          <h2>Featured Tournaments</h2>
-          <div className="tournament-grid">
-            <div className="tournament-card">
-              <div className="tournament-header">
-                <h3>VALORANT Championship</h3>
-                <span className="tournament-status">Registering</span>
-              </div>
-              <div className="tournament-details">
-                <p className="prize-pool">Prize Pool: $10,000</p>
-                <p className="tournament-date">March 25, 2024</p>
-                <p className="tournament-slots">Slots: 16/32</p>
-              </div>
-              <button className="join-button">Join Now</button>
-            </div>
-            <div className="tournament-card">
-              <div className="tournament-header">
-                <h3>CS:GO Masters</h3>
-                <span className="tournament-status">Starting Soon</span>
-              </div>
-              <div className="tournament-details">
-                <p className="prize-pool">Prize Pool: $5,000</p>
-                <p className="tournament-date">March 30, 2024</p>
-                <p className="tournament-slots">Slots: 24/32</p>
-              </div>
-              <button className="join-button">Join Now</button>
-            </div>
-            <div className="tournament-card">
-              <div className="tournament-header">
-                <h3>Apex Legends Cup</h3>
-                <span className="tournament-status">Open</span>
-              </div>
-              <div className="tournament-details">
-                <p className="prize-pool">Prize Pool: $7,500</p>
-                <p className="tournament-date">April 5, 2024</p>
-                <p className="tournament-slots">Slots: 8/32</p>
-              </div>
-              <button className="join-button">Join Now</button>
-            </div>
-          </div>
-        </section>
       </main>
     </div>
   );
 }
 
-export default Home; 
+export default Home;

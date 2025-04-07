@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './ScheduleMatches.css';
 
@@ -25,11 +25,21 @@ const ScheduleMatch = () => {
       return;
     }
 
+    const p1 = Number(player1);
+    const p2 = Number(player2);
+    const tid = Number(tournamentId);
+    
+    console.log(p1, " ", p2, " ", tid);
+    if (isNaN(p1) || isNaN(p2) || isNaN(tid)) {
+      setMessage("❌ Invalid data. Please try again.");
+      return;
+    }
+
     try {
-      await axios.post('http://localhost:5000/matches/schedule', {
-        tournament_id: tournamentId,
-        player1_id: player1,
-        player2_id: player2
+      await axios.post('http://localhost:5000/matches', {
+        tournament_id: tid,
+        player1_id: p1,
+        player2_id: p2
       });
       setMessage("✅ Match scheduled successfully!");
       setPlayer1('');
@@ -41,6 +51,13 @@ const ScheduleMatch = () => {
   };
 
   return (
+    <>
+    <header className="admin-header">
+                <h1>Game Management</h1>
+                <Link to="/admin/dashboard" className="dashboard-link">
+                    Back to Dashboard
+                </Link>
+            </header>
     <div className="schedule-match-container">
       <h2>Schedule Match for Tournament ID: {tournamentId}</h2>
 
@@ -70,6 +87,8 @@ const ScheduleMatch = () => {
 
       {message && <p className="message">{message}</p>}
     </div>
+    </>
+
   );
 };
 
