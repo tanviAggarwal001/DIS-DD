@@ -12,6 +12,8 @@ import UserGameList from './Pages/UserGameList';
 import AdminTournaments from './Pages/AdminTournaments';
 import UserTournamentsPage from './Pages/UserTournamentsPage';
 import ScheduleMatch from './Pages/ScheduleMatches';
+import MyMatchSchedules from './Components/MyMatchSchedule';
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -57,6 +59,7 @@ function App() {
 
 
         <Route path="/schedule-match/:tournamentId" element={<ScheduleMatch/>} />
+        <Route path="/View-Match/:userId" element={<MyMatchSchedules/>} />
 
 
       </Routes>

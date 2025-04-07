@@ -28,16 +28,16 @@ exports.getByTournament = async (req, res) => {
 
 // 3. Get all matches of a specific user
 exports.getByUser = async (req, res) => {
-  const { userId } = req.params;
-
   try {
+    const userId = parseInt(req.params.userId);
     const matches = await matchModel.findByUserWithDetails(userId);
     res.json(matches);
-  } catch (err) {
-    console.error("Error fetching user matches:", err);
-    res.status(500).json({ error: 'Failed to get user matches' });
+  } catch (error) {
+    console.error('Error in getByUser:', error);
+    res.status(500).json({ error: 'Failed to fetch user matches with details' });
   }
 };
+
 
 // 4. Set match winner
 exports.setWinner = async (req, res) => {
