@@ -1,0 +1,54 @@
+.leaderboard-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: rgba(26, 26, 26, 0.9);
+    border-radius: 15px;
+    color: #FFFFFF;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    border: 1px solid rgba(138, 43, 226, 0.3);
+  }
+  
+  .leaderboard-container h2 {
+    text-align: center;
+    color: #8A2BE2;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    font-size: 1.8rem;
+  }
+  
+  .leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .leaderboard-table thead {
+    background-color: rgba(138, 43, 226, 0.3);
+  }
+  
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+  }
+  
+  .leaderboard-table tr:hover {
+    background-color: rgba(138, 43, 226, 0.1);
+  }
+  
+  @media (max-width: 768px) {
+    .leaderboard-container {
+      padding: 1rem;
+      margin: 1rem;
+    }
+  
+    .leaderboard-table th,
+    .leaderboard-table td {
+      padding: 0.75rem;
+      font-size: 0.9rem;
+    }
+  }
+  

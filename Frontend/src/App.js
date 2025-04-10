@@ -16,6 +16,7 @@ import MyMatchSchedules from './Components/MyMatchSchedule';
 import MyStats from './Pages/Mystats';
 import AdminStatsPage from './Pages/AdminStatsPage';
 import UserProfilePage from './Pages/UserProfilePage';
+import Leaderboard from './Pages/LeaderBoard';
 
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
         <Route path='/tournaments' element={<UserTournamentsPage/>} />
         <Route path='/profile' element={<UserProfilePage/>} />
         <Route path='/mystats' element={<MyStats/>} />
+        <Route path='/leaderboard' element={<Leaderboard/>} />
 
         <Route path='/admin/tournaments' element={<AdminTournaments/>} />
         <Route path='/admin/games' element={<AdminGames/>} />

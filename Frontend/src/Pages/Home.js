@@ -33,6 +33,7 @@ function Home() {
           <Link to="/profile" className="nav-link">Profile</Link>
           <Link to="/tournaments" className="nav-link">Tournaments</Link>
           <Link to="/games" className="nav-link">Games</Link>
+          <Link to="/leaderboard" className="nav-link">Leaderboard</Link>
         </div>
         <div className="nav-actions">
           <button
