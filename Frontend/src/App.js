@@ -15,6 +15,7 @@ import ScheduleMatch from './Pages/ScheduleMatches';
 import MyMatchSchedules from './Components/MyMatchSchedule';
 import MyStats from './Pages/Mystats';
 import AdminStatsPage from './Pages/AdminStatsPage';
+import UserProfilePage from './Pages/UserProfilePage';
 
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
 
         <Route path='/games' element={<UserGameList/>} />
         <Route path='/tournaments' element={<UserTournamentsPage/>} />
+        <Route path='/profile' element={<UserProfilePage/>} />
         <Route path='/mystats' element={<MyStats/>} />
 
         <Route path='/admin/tournaments' element={<AdminTournaments/>} />

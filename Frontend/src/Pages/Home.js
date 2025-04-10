@@ -70,9 +70,9 @@ function Home() {
             <div className="dashboard-card">
               <h3>My Stats</h3>
               <ul>
-                <li>Win rate: 65%</li>
-                <li>Tournaments won: 12</li>
-                <li>Current rank: Diamond</li>
+                <li>Matches Played</li>
+                <li>Matches Won</li>
+                <li>Win Rate</li>
               </ul>
               <Link to="/mystats" className="action-button">View Details</Link>
             </div>

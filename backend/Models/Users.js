@@ -102,17 +102,33 @@ const userModel = {
   // Update a user
   updateUser: async (id, userData) => {
     try {
-      const { name, email, role } = userData;
+      const { name, email} = userData;
       const result = await pool.query(
-        'UPDATE users SET name = $1, email = $2, role = $3 WHERE id = $4 RETURNING *',
-        [name, email, role, id]
+        'UPDATE users SET name = $1, email = $2WHERE id = $3 RETURNING *',
+        [name, email, id]
       );
       return result.rows[0] || null;
     } catch (error) {
       console.error("Error updating user:", error);
       throw error;
     }
+  },
+
+  // Add this inside userModel
+updatePartial: async (id, userData) => {
+  const { name, email} = userData;
+  try {
+    const result = await pool.query(
+      'UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING *',
+      [name, email, id]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error partially updating user:", error);
+    throw error;
   }
+}
+
 };
 
 module.exports = userModel;

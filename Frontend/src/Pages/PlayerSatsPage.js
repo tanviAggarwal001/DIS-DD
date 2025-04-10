@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Mystats.css';
-import { Link } from 'react-router-dom';
-
+import './PlayerStats.css';
 
 const PlayerStatsPage = () => {
   const [stats, setStats] = useState({});
@@ -21,7 +19,7 @@ const PlayerStatsPage = () => {
     try {
       const userRes = await axios.get(`http://localhost:5000/user-id/${username}`);
       const userId = userRes.data.id;
-      const statsRes = await axios.get(`http://localhost:5000/users/${userId}/stats`);
+      const statsRes = await axios.get(`http://localhost:5000/user/${userId}/stats`);
       setStats(statsRes.data);
     } catch (err) {
       console.error("Error fetching player stats:", err);
@@ -30,12 +28,12 @@ const PlayerStatsPage = () => {
 
   return (
     <>
-       <header className="admin-header">
-                       <h1>Statistics/History</h1>
-                       <Link to="/home" className="dashboard-link">
-                           Back to Dashboard
-                       </Link>
-                   </header>         
+    <header className="admin-header">
+                    <h1>Game Management</h1>
+                    <Link to="/home" className="dashboard-link">
+                        Back to Dashboard
+                    </Link>
+                </header>
     <div className="player-stats-container">
       <h2>{username}'s Performance Summary</h2>
       <div className="stats-cards">
