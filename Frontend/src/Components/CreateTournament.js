@@ -40,34 +40,49 @@ const CreateTournament = ({ onTournamentAdded }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const { name, game_id, start_date, end_date, members_per_match } = tournamentData;
-
+  
     if (!name || !game_id || !start_date || !end_date || !members_per_match || !creatorId) {
       alert("Please fill in all fields.");
       return;
     }
-
+  
     const parsedGameId = parseInt(game_id, 10);
     const parsedMembers = parseInt(members_per_match, 10);
-
+  
     if (isNaN(parsedGameId) || isNaN(parsedMembers)) {
       alert("Game ID and Members per Match must be valid numbers.");
       return;
     }
-
+  
+    // Date validation
+    const today = new Date();
+    const sDate = new Date(start_date);
+    const eDate = new Date(end_date);
+    today.setHours(0, 0, 0, 0); // Normalize to start of day
+  
+    if (sDate < today || eDate < today) {
+      alert("Start and End dates must be today or in the future.");
+      return;
+    }
+  
+    if (sDate > eDate) {
+      alert("Start date cannot be after end date.");
+      return;
+    }
+  
     const payload = {
       name: name.trim(),
-      game_id: parseInt(game_id),
+      game_id: parsedGameId,
       start_date,
       end_date,
       members_per_match: parsedMembers,
       created_by: creatorId,
     };
-
+  
     setLoading(true);
     try {
-      console.log(typeof game_id, game_id);
       const response = await axios.post("http://localhost:5000/tournaments/create", payload);
       alert("Tournament created successfully!");
       setTournamentData({
@@ -84,7 +99,7 @@ const CreateTournament = ({ onTournamentAdded }) => {
     }
     setLoading(false);
   };
-
+  
   return (
     <div className="tournament-form-container">
       <h3>Create a New Tournament</h3>

@@ -21,6 +21,8 @@ const initializeScoresTable = async () => {
 
 initializeScoresTable();
 
+
+
 module.exports = {
   // Placeholder for future score-related functions
 };

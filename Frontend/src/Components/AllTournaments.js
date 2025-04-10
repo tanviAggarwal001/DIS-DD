@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import EditTournamentModal from './EditTournaments.js';
 import './AllTournaments.css';
 
 const AllTournaments = () => {
@@ -10,6 +11,7 @@ const AllTournaments = () => {
   const [showMatchesFor, setShowMatchesFor] = useState(null);
   const [matches, setMatches] = useState([]);
   const [scoreInputs, setScoreInputs] = useState({});
+  const [editingTournament, setEditingTournament] = useState(null);
 
   useEffect(() => {
     fetchTournaments();
@@ -34,33 +36,23 @@ const AllTournaments = () => {
     }
   };
 
-  const fetchMatches = async (tournamentId) => {
-    try {
-      const res = await axios.get(`http://localhost:5000/matches/tournament/${tournamentId}`);
-      setMatches(res.data);
-      setShowMatchesFor(tournamentId);
-    } catch (err) {
-      console.error('Error fetching matches:', err);
-    }
-  };
+ const fetchMatches = async (tournamentId) => {
+  try {
+    const res = await axios.get(`http://localhost:5000/matches/tournament/${tournamentId}`);
+    const matchesWithScores = await Promise.all(res.data.map(async (match) => {
+      const scoreRes = await axios.get(`http://localhost:5000/scores/match/${match.id}/check`);
+      return {
+        ...match,
+        scoresSubmitted: scoreRes.data.submitted
+      };
+    }));
+    setMatches(matchesWithScores);
+    setShowMatchesFor(tournamentId);
+  } catch (err) {
+    console.error('Error fetching matches:', err);
+  }
+};
 
-  const handleEdit = async (id) => {
-    const updatedData = prompt('Enter updated details (name,game_id,start_date,end_date,members_per_match) comma separated');
-    if (!updatedData) return;
-    const [name, game_id, start_date, end_date, members_per_match] = updatedData.split(',');
-    try {
-      await axios.put(`http://localhost:5000/tournaments/${id}`, {
-        name,
-        game_id,
-        start_date,
-        end_date,
-        members_per_match
-      });
-      fetchTournaments();
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const handleDelete = async (id) => {
     try {
@@ -125,15 +117,37 @@ const AllTournaments = () => {
           {tournaments.map((tournament) => (
             <tr key={tournament.id}>
               <td>{tournament.name}</td>
-              <td>{tournament.game_id}</td>
-              <td>{tournament.start_date}</td>
-              <td>{tournament.end_date}</td>
+              <td>{tournament.game_name || 'Unknown'}</td>
+              <td>{new Date(tournament.start_date).toLocaleDateString()}</td>
+              <td>{new Date(tournament.end_date).toLocaleDateString()}</td>
               <td>{tournament.status}</td>
-              <td><button onClick={() => handleEdit(tournament.id)}>✏️</button></td>
+              <td>
+                {tournament.status === 'completed' ? (
+                  <span style={{ color: 'gray', fontStyle: 'italic' }} title="Cannot edit completed tournament">
+                    ✏️
+                  </span>
+                ) : (
+                  <button onClick={() => setEditingTournament(tournament)}>✏️</button>
+                )}
+              </td>
               <td><button onClick={() => handleDelete(tournament.id)}>🗑️</button></td>
               <td><button onClick={() => fetchRegisteredPlayers(tournament.id)}>👥</button></td>
-              <td><Link to={`/schedule-match/${tournament.id}`}>Schedule</Link></td>
-              <td><button onClick={() => fetchMatches(tournament.id)}>📋 Matches</button></td>
+              <td>
+                {tournament.status === 'ongoing' ? (
+                  <Link to={`/schedule-match/${tournament.id}`}>Schedule</Link>
+                ) : (
+                  <span style={{ color: 'gray', fontStyle: 'italic' }}>
+                    {tournament.status === 'completed' ? 'Tournament is over' : 'Not started yet'}
+                  </span>
+                )}
+              </td>
+              <td>
+                {(tournament.status === 'ongoing' || tournament.status === 'completed') ? (
+                <button onClick={() => fetchMatches(tournament.id)}>📋 Matches</button>
+                 ) : ( 
+                <span style={{ color: 'gray', fontStyle: 'italic' }}>Not available</span>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -168,6 +182,7 @@ const AllTournaments = () => {
                 <tr>
                   <th>Player 1</th>
                   <th>Player 2</th>
+                  <th>Winner</th>
                   <th>Score</th>
                   <th>Submit Status</th>
                 </tr>
@@ -177,11 +192,15 @@ const AllTournaments = () => {
                   <tr key={match.id}>
                     <td>{match.player1_name}</td>
                     <td>{match.player2_name}</td>
+                    <td>{match.winner_name || 'Pending'}</td>
                     <td>
-                      {match.status === 'completed' && match.player1_score != null && match.player2_score != null
-                        ? `${match.player1_score} - ${match.player2_score}`
-                        : 'Not submitted'}
+                      {match.scoresSubmitted ? (
+                        match.status === 'completed' && match.player1_score != null && match.player2_score != null
+                          ? `${match.player1_score} - ${match.player2_score}`
+                          : '✅ Submitted'
+                      ) : 'Not submitted'}
                     </td>
+
                     <td>
                       {match.status === 'completed' ? (
                         <span>✅ Done</span>
@@ -190,16 +209,12 @@ const AllTournaments = () => {
                           <input
                             type="number"
                             placeholder="P1"
-                            onChange={(e) =>
-                              handleScoreChange(match.id, 'player1_score', e.target.value)
-                            }
+                            onChange={(e) => handleScoreChange(match.id, 'player1_score', e.target.value)}
                           />
                           <input
                             type="number"
                             placeholder="P2"
-                            onChange={(e) =>
-                              handleScoreChange(match.id, 'player2_score', e.target.value)
-                            }
+                            onChange={(e) => handleScoreChange(match.id, 'player2_score', e.target.value)}
                           />
                           <button onClick={() => submitResult(match)}>Submit</button>
                         </>
@@ -212,6 +227,14 @@ const AllTournaments = () => {
           )}
           <button onClick={() => setShowMatchesFor(null)}>Close Matches</button>
         </div>
+      )}
+
+      {editingTournament && (
+        <EditTournamentModal
+          tournament={editingTournament}
+          onClose={() => setEditingTournament(null)}
+          onUpdated={fetchTournaments}
+        />
       )}
     </div>
   );

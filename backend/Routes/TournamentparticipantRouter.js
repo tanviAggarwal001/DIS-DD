@@ -12,10 +12,16 @@ router.get('/registered/:tournamentId', async (req, res) => {
   
     try {
       const result = await pool.query(
-        `SELECT u.name, u.rank , u.id
-         FROM users u 
-         JOIN "tournament_participants" tp ON u.id = tp.user_id 
-         WHERE tp.tournament_id = $1`,
+        `SELECT u.id, u.name, u.rank
+         FROM users u
+         INNER JOIN tournament_participants tp ON u.id = tp.user_id
+         WHERE tp.tournament_id = $1
+         AND u.id NOT IN (
+           SELECT player1_id FROM matches WHERE tournament_id = $1
+           UNION
+           SELECT player2_id FROM matches WHERE tournament_id = $1
+         )
+         `,
         [tournamentId]
       );
       res.json(result.rows);

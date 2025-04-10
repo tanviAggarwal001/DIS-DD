@@ -24,5 +24,21 @@ router.get('/match/:matchId', async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
+
+  // routes/scores.js
+router.get('/match/:matchId/check', async (req, res) => {
+  const { matchId } = req.params;
+  try {
+    const result = await pool.query(
+      `SELECT COUNT(*) FROM scores WHERE match_id = $1`,
+      [matchId]
+    );
+    res.json({ submitted: parseInt(result.rows[0].count) >= 2 });
+  } catch (err) {
+    console.error('Error checking scores:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
   
 module.exports = router;

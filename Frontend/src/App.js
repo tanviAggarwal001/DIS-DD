@@ -14,6 +14,7 @@ import UserTournamentsPage from './Pages/UserTournamentsPage';
 import ScheduleMatch from './Pages/ScheduleMatches';
 import MyMatchSchedules from './Components/MyMatchSchedule';
 import MyStats from './Pages/Mystats';
+import AdminStatsPage from './Pages/AdminStatsPage';
 
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
 
         <Route path='/admin/tournaments' element={<AdminTournaments/>} />
         <Route path='/admin/games' element={<AdminGames/>} />
+        <Route path='/admin/stats' element={<AdminStatsPage/>} />
 
 
         <Route path="/schedule-match/:tournamentId" element={<ScheduleMatch/>} />

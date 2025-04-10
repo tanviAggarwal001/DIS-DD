@@ -139,13 +139,16 @@ const matchModel = {
         SELECT 
           M.*, 
           U1.name AS player1_name, 
-          U2.name AS player2_name
+          U2.name AS player2_name,
+          W.name AS winner_name
         FROM matches M
         INNER JOIN users U1 ON M.player1_id = U1.id
         INNER JOIN users U2 ON M.player2_id = U2.id
+        LEFT JOIN users W ON M.winner_id = W.id
         WHERE M.tournament_id = $1
         ORDER BY M.scheduled_at ASC
       `, [tournamentId]);
+      
   
       return result.rows;
     } catch (error) {

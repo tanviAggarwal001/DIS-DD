@@ -1,6 +1,7 @@
 const matchModel = require('../Models/Matches');
 const scoreModel = require('../Models/Score');
 const pool = require('../Models/db');
+// const ranks = ['Unranked', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'];
 
 // 1. Create a new match
 exports.create = async (req, res) => {
@@ -44,6 +45,8 @@ exports.submitResult = async (req, res) => {
   const matchId = req.params.matchId;
   const { player1_id, player1_score, player2_id, player2_score } = req.body;
 
+  const ranks = ['Unranked', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'];
+
   try {
     // Insert or update player scores
     await pool.query(`
@@ -57,8 +60,14 @@ exports.submitResult = async (req, res) => {
 
     // Determine winner
     let winner_id = null;
-    if (player1_score > player2_score) winner_id = player1_id;
-    else if (player2_score > player1_score) winner_id = player2_id;
+    let loser_id = null;
+    if (player1_score > player2_score) {
+      winner_id = player1_id;
+      loser_id = player2_id;
+    } else if (player2_score > player1_score) {
+      winner_id = player2_id;
+      loser_id = player1_id;
+    }
 
     // Update match status and winner
     await pool.query(`
@@ -67,12 +76,37 @@ exports.submitResult = async (req, res) => {
       WHERE id = $2
     `, [winner_id, matchId]);
 
-    res.status(200).json({ message: 'Result submitted successfully' });
+    // Fetch current ranks
+    const userRanks = await pool.query(`
+      SELECT id, rank FROM users WHERE id IN ($1, $2)
+    `, [player1_id, player2_id]);
+
+    const winnerRankRow = userRanks.rows.find(u => u.id === winner_id);
+    const loserRankRow = userRanks.rows.find(u => u.id === loser_id);
+
+    const winnerRankIndex = ranks.indexOf(winnerRankRow.rank || 'Unranked');
+    const loserRankIndex = ranks.indexOf(loserRankRow.rank || 'Unranked');
+
+    // Update winner: promote 1 step
+    const newWinnerRank = ranks[Math.min(winnerRankIndex + 1, ranks.length - 1)];
+    // Update loser: demote 1 step
+    const newLoserRank = ranks[Math.max(loserRankIndex - 1, 0)];
+      console.log(newWinnerRank, newLoserRank);
+    await pool.query(`
+      UPDATE users SET rank = CASE 
+        WHEN id = $1 THEN $2 
+        WHEN id = $3 THEN $4 
+      END
+      WHERE id IN ($1, $3)
+    `, [winner_id, newWinnerRank, loser_id, newLoserRank]);
+
+    res.status(200).json({ message: 'Result submitted and ranks updated' });
   } catch (error) {
     console.error("Error submitting match result:", error);
     res.status(500).json({ error: 'Failed to submit result' });
   }
 };
+
 // 4. Set match winner
 exports.setWinner = async (req, res) => {
   const { matchId } = req.params;

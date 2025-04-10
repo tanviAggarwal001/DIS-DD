@@ -30,7 +30,7 @@ const AdminDashboard = () => {
           <span className="brand-subtitle">ESPORTS</span>
         </div>
         <div className="nav-links">
-          <Link to="/admin/profile" className="nav-link">Profile</Link>
+          <Link to="/admin/stats" className="nav-link">Overall Stats</Link>
           <Link to="/admin/tournaments" className="nav-link">Tournaments</Link>
           <Link to="/admin/games" className="nav-link">Games</Link>
         </div>
@@ -63,18 +63,18 @@ const AdminDashboard = () => {
               <ul>
                 <li>Create new tournaments</li>
                 <li>Manage existing tournaments</li>
-                <li>Approve tournament requests</li>
+                <li>Publish results</li>
               </ul>
               <Link to="/admin/tournaments" className="action-button">Manage Tournaments</Link>
             </div>
             <div className="dashboard-card">
-              <h3>User Management</h3>
+              <h3>Getting Statistics</h3>
               <ul>
+                <li>View Number of Tournaments</li>
+                <li>View Number of Matches</li>
                 <li>View all users</li>
-                <li>Ban/unban users</li>
-                <li>Manage user roles</li>
               </ul>
-              <Link to="/admin/users" className="action-button">Manage Users</Link>
+              <Link to="/admin/stats" className="action-button">View</Link>
             </div>
             <div className="dashboard-card">
               <h3>Game Management</h3>

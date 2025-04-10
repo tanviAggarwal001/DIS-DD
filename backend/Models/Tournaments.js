@@ -92,14 +92,22 @@ const tournamentModel = {
 
   findAll: async () => {
     try {
-      const result = await pool.query(`SELECT * FROM tournaments ORDER BY start_date ASC`);
+      const result = await pool.query(`
+        SELECT 
+          t.*, 
+          g.name AS game_name
+        FROM tournaments t
+        LEFT JOIN games g ON t.game_id = g.id
+        ORDER BY t.start_date ASC
+      `);
+      // console.log(result.rows);
       return result.rows;
     } catch (error) {
       console.error("Error fetching tournaments:", error);
       throw error;
     }
   },
-
+  
   findById: async (id) => {
     try {
       const result = await pool.query(`SELECT * FROM tournaments WHERE id = $1`, [id]);
@@ -111,29 +119,29 @@ const tournamentModel = {
   },
 
   updateStatuses: async () => {
-    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-  
     try {
       // Set to 'completed'
       await pool.query(`
         UPDATE tournaments
         SET status = 'completed'
-        WHERE end_date < $1
-      `, [today]);
+        WHERE end_date < NOW()
+      `);
   
       // Set to 'ongoing'
       await pool.query(`
         UPDATE tournaments
         SET status = 'ongoing'
-        WHERE start_date <= $1 AND end_date >= $1
-      `, [today]);
+        WHERE start_date <= NOW() AND end_date >= NOW()
+      `);
   
       // Set to 'upcoming'
       await pool.query(`
         UPDATE tournaments
         SET status = 'upcoming'
-        WHERE start_date > $1
-      `, [today]);
+        WHERE start_date > NOW()
+      `);
+  
+      // console.log("Tournament statuses updated based on timestamp");
     } catch (err) {
       console.error("Error updating statuses:", err);
       throw err;
